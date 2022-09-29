@@ -1,0 +1,32 @@
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        boolean checkright;
+        boolean checkleft;
+        if(p == null && q == null) return true;
+        else if(p == null || q == null) return false;       
+        else if(p.val != q.val) return false;
+        else {
+         checkright = isSameTree(p.right, q.right);
+         checkleft  = isSameTree(p.left,q.left);
+        }
+        
+        if(checkleft == true && checkleft == checkright ) return true;
+        else return false;       
+    }
+}
+
+
+********************************************************
+
+Here I learned again to break down a problem into cases.
+
+I broke down every case that could happen in the binary tree.
+
+Case 1 - Both null
+Case 2 - one null one is not null
+case 3 - both not null and equal
+Case 4 - both not null and not equal
+
+
+One other note I learned is that in recursion, the base case will execute at some point. So if you set a variable
+equal to the recursive call, then in the end,,it will get the malue bubbled up from that point, all the way to the top.

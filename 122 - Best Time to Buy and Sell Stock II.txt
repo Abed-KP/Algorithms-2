@@ -1,0 +1,23 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        
+        int buyday = 0;
+        int max = 0;
+        
+        for(int i  = 1; i < prices.length; i++){
+            
+            if(prices[i] > prices[buyday]){
+                max += prices[i] - prices[buyday];
+            }     
+                buyday = i;
+            }
+        return max;
+        }
+    }
+
+
+**********************************************************************************************************************************************************************************************************************************************
+
+I learned this strategy where even though you are doing something seemingly wrong, it might end be producing the right answeer.
+
+Here for example, even thought we "selling" everyday, it doesnt matter, becaause ultimately the last sale matters, and if prices go down, then we can buy on those days.

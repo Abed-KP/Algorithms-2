@@ -1,0 +1,48 @@
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+      
+        ListNode l1 = head;
+        int list_size = 0;        
+        while(l1 != null){
+            list_size++;
+            l1 = l1.next;
+        }
+        if( list_size % 2 == 1){
+            list_size = list_size / 2 + 2;
+        }
+        else{
+             list_size = list_size / 2 + 1;
+        }        
+        l1 = head;
+        int i = 1;
+        while(i != list_size){
+            l1 = l1.next;
+            i++;
+        }        
+        ListNode start_of_end = null;
+        
+        while(l1 != null){
+            ListNode temp = l1.next;
+            l1.next = start_of_end;
+            start_of_end = l1;
+            l1 = temp;
+        }
+        
+        while(start_of_end != null){
+            if(start_of_end.val != head.val) return false;
+            head = head.next;
+            start_of_end = start_of_end.next;
+        }
+        return true;
+    }
+
+}
+
+
+*******************************************
+
+I solved this question by realzing that any question that is looking to confirm a palindrome, I must find a way to traverse with 
+
+one pointer from the start, and another from the end. We stop in the middle, and if everything was equal, then it is
+
+a palindrome.

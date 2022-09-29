@@ -1,0 +1,82 @@
+class Solution {
+    public boolean isIsomorphic(String s, String t) {    
+        
+    if (s.length() != t.length()){
+        return false;
+    }
+     
+        HashMap<Character,ArrayList<Integer>> smap = new HashMap();  I learned how to use a hashmap with a nested data
+        HashMap<Character,ArrayList<Integer>> tmap = new HashMap();  data structure. That is powerful. I also learned
+       							             to always find a simple way to define equivilancies.
+    
+    
+        for (int i = 0; i < s.length(); i++) {
+            
+           char  schar = s.charAt(i);
+           char  tchar = t.charAt(i);
+            
+            if (!smap.containsKey(schar)){
+                smap.put(schar, new ArrayList());
+                smap.get(schar).add(i);
+            }
+        else{
+            smap.get(schar).add(i); 
+        }
+            if (!tmap.containsKey(tchar)){
+                tmap.put(tchar, new ArrayList());
+                tmap.get(tchar).add(i);
+            }
+            
+        else{
+            tmap.get(tchar).add(i); 
+        }
+        }
+        
+        for (int i = 0; i < s.length(); i++){
+           char schar = s.charAt(i);
+           char  tchar = t.charAt(i);
+            if (!smap.get(schar).equals(tmap.get(tchar))){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+
+Solution 2******************************************************************************
+
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {    
+        
+
+    if(s.length()!=t.length()){
+        return false;
+    }
+ 
+    HashMap<Character, Character> map1 = new HashMap<>();
+    HashMap<Character, Character> map2 = new HashMap<>();
+ 
+    for(int i=0; i<s.length(); i++){
+        char c1 = s.charAt(i);
+        char c2 = t.charAt(i);
+ 
+        if(map1.containsKey(c1)){
+            if(c2!=map1.get(c1)){
+                return false;
+            }
+        }else{
+            if(map2.containsKey(c2)){
+                return false;
+            }
+ 
+            map1.put(c1, c2);
+            map2.put(c2, c1);
+        }
+    }
+ 
+    return true;
+    }
+}

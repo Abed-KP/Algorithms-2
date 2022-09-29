@@ -1,0 +1,150 @@
+class Solution {
+   
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        
+        if(prerequisites.length == 0 || prerequisites == null) return true;
+        
+         HashMap<Integer, Node> map = new HashMap();
+         Queue<Node> que = new LinkedList();
+        
+        for(int i = 0; i < prerequisites.length; i++){
+            int pre = prerequisites[i][1];
+            int course = prerequisites[i][0];
+            
+            if(!map.containsKey(pre)) map.put(pre,new Node());
+            if(!map.containsKey(course)) map.put(course, new Node());
+            
+            Node preReq = map.get(pre);
+            Node Course = map.get(course);
+            preReq.adjacencyList.add(Course);
+            Course.inbounds++;            
+        }
+        
+        for(Map.Entry<Integer,Node> entry : map.entrySet()){
+            if(entry.getValue().inbounds == 0) que.add(entry.getValue());
+        }
+        
+        List<Node> list = new LinkedList();
+        
+        while(!que.isEmpty()){
+            
+            Node curr = que.poll();
+            list.add(curr);
+            
+            for(int i = 0; i < curr.adjacencyList.size(); i++){
+                Node nieghbor = curr.adjacencyList.get(i);
+                nieghbor.inbounds--;
+                if(nieghbor.inbounds == 0) que.add(nieghbor);
+            }
+        }
+       
+      return  list.size() == map.size();
+        
+    }
+    
+    class Node{
+        
+        int inbounds;
+        List<Node> adjacencyList;
+
+         Node(){
+            this.inbounds = 0;
+            this.adjacencyList = new ArrayList();
+        }
+        
+        Node(int inbounds, List<Node> list){
+            this.inbounds = inbounds;
+            this.adjacencyList = list;
+        }
+        
+        Node(int inbounds){
+            this.inbounds = inbounds;
+        }
+        
+        Node( List<Node> list){
+            this.adjacencyList = list;
+        }
+    }
+}
+************************************************************************************************************************
+
+Today, we learned the Topological sort algorithm.
+
+The first most important thing is to recognize when to use it.
+	We use it when we need to develop an ordering so that we do not run into a situation of " Oh No, I cannnot do
+	this because i did not to this previous thing that is a pre-requisite to this thing.
+
+	The example here is course - Pre-requisites. We do not want to run into situations where we cannot take
+	a course because we did not take a pre-requisite.
+
+Here we are asked to determine whethere it is the case that the pre-requisties can be met. So we develop an ordering,
+or atleast try to with topological sort.
+
+Here is how it works.
+
+-  Model your entities as Nodes in a graph. Here the entities are courses.
+-  Each course (node) has a number of pre-requisites which we will call 'inbounds.'
+-  Each course (node) has an adjaceny list that contains the Courses that this specific course serves as a pre-requisite
+
+ The algorithm does the following.
+
+1 - Add all Nodes with 0 inbounds to a que.
+2  - While que is not empty, poll a Node Then for each one, add it to a list, then 
+remove the edges from that node, or to simulate, decrement the 'inbound' field of all the Nodes in the 
+adjacency list of the Node you just polled.
+3 - If any of those nodes's inbound fields become '0', add them to the que.
+4 - Rinse and repeat.
+
+In this end, if the number of nodes in the list != thew total number of course/Nodes, then there is a cycle.
+
+Topological sort does not work on graphs with a cycle. But it tells you if there is a cycle.
+
+This is because a cycle results in an 'inbound' for a Node that should not have that inbound, therfore that Node
+will never be added to the que, because the only way to add it, is to reach the Node that it points to, which points
+back to it.
+
+
+
+***************************************************************************************************************************
+class Solution {
+    HashMap<Integer,List<Integer>> map = new HashMap();				// Post-Order DFS
+    HashMap<Integer, Boolean> valid = new HashMap();
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        
+        
+        for(int i = 0; i < prerequisites.length; i++){
+            int course = prerequisites[i][0];
+            int preReq = prerequisites[i][1];
+            if(!map.containsKey(course)) map.put(course, new ArrayList());
+            map.get(course).add(preReq);            
+        }
+        
+       for (Map.Entry<Integer,List<Integer>> entry : map.entrySet()){
+            if(!valid.containsKey(entry.getKey())){
+                takeCourse(entry.getKey());
+            }
+           if(valid.get(entry.getKey()) == false) return false;
+       }
+        return true;
+        
+    }
+    public void takeCourse(int course){
+        if(!map.containsKey(course)){
+            valid.put(course,true);
+            return;
+        }
+        valid.put(course,false);
+        boolean res = true;
+        List<Integer> list = map.get(course);
+        for(int i = 0; i < list.size(); i++){
+            int preReq = list.get(i);
+            if (!valid.containsKey(preReq)) takeCourse(preReq);            
+            if(valid.get(preReq) == false){
+                    res = false;
+                    break;
+                }
+        }
+        valid.put(course, res);
+    }
+    
+}

@@ -1,0 +1,76 @@
+class Solution {
+
+    List < List < String >> result = new ArrayList();
+    List < Integer > queenPositions = new ArrayList();
+    HashSet < Integer > takenCols = new HashSet();
+    HashSet < Integer > takenNegDiag = new HashSet();
+    HashSet < Integer > takenPosDiag = new HashSet();
+    int size;
+    
+    public List < List < String >> solveNQueens(int n) {
+
+        this.size = n;
+        int row = 0;
+        int col = 0;
+        backTrack(row);
+        return result;
+    }
+
+    public void backTrack(int row) {
+        
+        if (row == size) {
+            addResult();
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+            if (!takenCols.contains(i) && !takenNegDiag.contains(row - i) && !takenPosDiag.contains(row + i)) {
+
+                takenCols.add(i);
+                takenNegDiag.add(row - i);
+                takenPosDiag.add(row + i);
+                queenPositions.add(i);
+
+                backTrack(row + 1);
+
+                takenCols.remove(i);
+                takenNegDiag.remove(row - i);
+                takenPosDiag.remove(row + i);
+                queenPositions.remove(queenPositions.size() - 1);
+            }
+        }
+    }
+    public void addResult() {
+        List < String > temp = new ArrayList();
+        for (int i = 0; i < size; i++) {
+            StringBuilder row = new StringBuilder();
+            for (int j = 0; j < size; j++) {
+                if (queenPositions.get(i) == j) row.append('Q');
+                else row.append('.');
+            }
+            temp.add(row.toString());
+        }
+        result.add(temp);
+    }
+}
+
+
+************************************************************************************
+
+This a question that must be solved in a brute force approach.
+
+Some things that must be realized.
+
+1 - We must keep track of which cols have queens so as not to place queens in the wrong column. The same goes
+	for negative diagonals and positive diagonals.
+	A HashSet can be used. For diagonals, we can notice for negatgive ones (row - col) never changes, and for
+	positive ones (row + col) never changes.
+
+2 - Next, we simply try each column on each row, and we know we have an answer when we reach the number of rows.
+	We backtrack and remove Hashset registrations if we cannot go further.
+
+
+To write the code, even though it was difficult  we just had to break down what was happening. "We have to try each column on
+each row." That means loops for all columns on each row.
+
+
+For the future, a Question that can really help in thse types of problems is " How can asn exaustive backtracking approach help. "

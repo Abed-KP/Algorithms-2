@@ -1,0 +1,23 @@
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        
+     List<Integer> list = new ArrayList();		 I learned i  this queestion, to pay attention to the speceifics of 
+        int index;					 instructions, and to explore potential solutions.
+
+        for ( int i = 0; i < nums.length; i++){  
+            
+            index = Math.abs(nums[i]) - 1;
+           if (nums[index] < 0){
+               list.add(Math.abs(nums[i]));
+           }
+            else{
+                nums[index] = - nums[index];
+            }
+        
+         
+        }
+      return list;   
+    }
+      
+        
+    }

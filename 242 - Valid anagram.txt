@@ -1,0 +1,23 @@
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        
+        if (s.length() != t.length()){				I learned that Anagrams are true if, the Alpharray
+            return false;				is equal. I learned the importance of looking for such patterns.
+        }
+        
+        int[] string1 = new int[26];
+        int[] string2 = new int[26];
+   
+        
+        for (int i = 0; i < s.length(); i++){
+            
+            char sc = s.charAt(i);
+            char tc = t.charAt(i);
+            string1[sc - 'a']++;
+            string2[tc - 'a']++;
+        }
+
+       return Arrays.equals(string1,string2);
+}
+        
+    }

@@ -1,0 +1,283 @@
+class Solution {
+    public List < String > fullJustify(String[] words, int maxWidth) {
+
+        List < String > justifiedText = new ArrayList();
+        StringBuilder allwords = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            allwords.append(words[i] + ' ');
+        }
+        String text = allwords.toString();
+        int cursor = 0;
+
+        while (cursor < text.length()) {
+            int start = cursor;
+            StringBuilder temp = new StringBuilder();
+
+            if (cursor + maxWidth >= text.length()) {
+                cursor = text.length() - 1;
+                temp.append(text.substring(start, cursor));
+                rightJustify(maxWidth, temp, justifiedText);
+                break;
+            }
+
+            cursor = cursor + maxWidth - 1;
+
+            if (text.charAt(cursor + 1) == ' ') {
+                justifiedText.add(text.substring(start, cursor + 1));
+                cursor += 2;
+            } else if (text.charAt(cursor) == ' ') {
+                temp.append(text.substring(start, cursor));
+                    if (temp.indexOf(" ") == -1) rightJustify(maxWidth, temp, justifiedText);
+                        else leftJustify(temp, justifiedText, 1);
+                cursor += 1;
+            } else {
+                int backtracks = 1;
+                while (text.charAt(cursor) != ' ') {
+                    cursor--;
+                    backtracks++;
+                }
+                temp.append(text.substring(start, cursor));
+                    if (temp.indexOf(" ") == -1) rightJustify(maxWidth, temp, justifiedText);
+                        else leftJustify(temp, justifiedText, backtracks);
+                cursor += 1;
+            }
+        }
+        return justifiedText;
+    }
+
+    public void rightJustify(int maxWidth, StringBuilder temp, List < String > justifiedText) {
+        while (temp.length() != maxWidth) temp.append(' ');
+        justifiedText.add(temp.toString());
+    }
+
+    public void leftJustify(StringBuilder temp, List < String > justifiedText, int backtracks) {
+        int pointer = 0;
+        while (backtracks != 0) {
+            if (temp.charAt(pointer) == ' ') {
+                temp.insert(pointer, ' ');
+                backtracks--;
+                while (temp.charAt(pointer) == ' ') pointer++;
+            } else pointer = (temp.length() - 1 == pointer) ? 0 : pointer + 1;
+        }
+        justifiedText.add(temp.toString());
+    }
+}
+
+
+
+***********************************
+class Solution {
+    
+    List<String> result = new ArrayList();
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> currLineWords = new ArrayList();
+        List<Integer> spaceCounts = new ArrayList();
+        int currWidth = 0;
+        
+        for(int i = 0; i < words.length; i++){
+            int currWordLength = words[i].length();
+            String currWord =  words[i];           
+             if((currWidth + currWordLength + 1 <= maxWidth)
+                || (currWidth == 0 && currWidth + currWordLength <= maxWidth))
+             {
+                if(!currLineWords.isEmpty()){    // If it is the first word, do not add a space
+                  spaceCounts.add(1);
+                  currWidth += currWordLength + 1;
+                }
+                else currWidth += currWordLength;
+                 
+                currLineWords.add(currWord);               
+            }
+            else{
+                getSpaceCounts(spaceCounts,currWidth,maxWidth);
+                createLine(currLineWords,spaceCounts);
+                currWidth = 0;
+                currLineWords = new ArrayList();
+                spaceCounts = new ArrayList();
+                i--; // We cannot process this word, so we have to come back to it next iteration.
+            }
+        }
+        handleLastLine(currLineWords,spaceCounts,maxWidth);
+
+        
+        return result;
+    }
+    
+    public void handleLastLine(List<String> currLineWords, List<Integer> spaceCounts, int maxWidth){
+         StringBuilder line = new StringBuilder();
+          for(int i = 0; i < spaceCounts.size(); i++){
+                String currWord = currLineWords.get(i);
+                String spaces = getSpaces(spaceCounts.get(i));
+                line.append(currWord);
+                line.append(spaces);
+            }
+            line.append(currLineWords.get(currLineWords.size() - 1)); 
+            int neededSpaces = maxWidth - line.length();
+            for(int i = 0; i <  neededSpaces; i++){
+                line.append(" ");
+            }
+        result.add(line.toString());
+            
+    }
+    
+    public void createLine(List<String> currLineWords, List<Integer> spaceCounts){
+        StringBuilder line = new StringBuilder();
+        if(spaceCounts.size() > 0 && spaceCounts.get(0) < 0){    //incase of 1 word on line
+           line.append(currLineWords.get(0));
+           line.append(getSpaces(Math.abs(spaceCounts.get(0))));
+        }
+        else{
+            for(int i = 0; i < spaceCounts.size(); i++){
+                String currWord = currLineWords.get(i);
+                String spaces = getSpaces(spaceCounts.get(i));
+                line.append(currWord);
+                line.append(spaces);
+            }
+            line.append(currLineWords.get(currLineWords.size() - 1)); 
+        }
+        result.add(line.toString());
+
+    }
+    public void getSpaceCounts(List<Integer> spaceCounts, int currWidth, int maxWidth){
+        int neededSpaces = maxWidth - currWidth;
+        if(spaceCounts.size() == 0 && neededSpaces != 0){
+            spaceCounts.add(-neededSpaces); // incase only 1 word on line
+            return;
+        } 
+        int i = 0;
+        while( neededSpaces > 0){
+            spaceCounts.set(i,spaceCounts.get(i) + 1);
+            neededSpaces--;
+            i++;
+            if(i == spaceCounts.size()) i = 0;
+        }
+    }
+    
+    public String getSpaces(int spaceCounts){
+        StringBuilder spaces = new StringBuilder();
+        for(int i = 0; i < spaceCounts; i++){
+            spaces.append(" ");
+        }
+        return spaces.toString();
+    }
+}
+********************************************************************************************************************************
+
+
+This question again, is another one that is proving to me that one of the best ways of solving problems is with
+these 2 steps.
+
+1 - Understand the problem and everything that has to be done.
+2 - Break the problem down into Cases. Each case represents every possible pathway that can happen.
+
+In this problem. Case 1: Take max width and land in middle of word.
+		 Case 2: Take max width and land on space character.
+		 Case 3: Take max width and Land perfect.
+
+Addtionally I learend that sometimes each one of these cases might have sub-cases. Case 1 and 2 have the sub-case where,
+"What if our chunk only has 1 word?".
+
+Also, it is important to consider edge cases like very simple inputs to cover every side of the solution.
+
+The overall solution for this question is as folows.
+
+Concatenate the list of words with a space character between them. Then we take maxwidth chunks, and check where we land
+There are only 3 major cases. If case 1 happens, we have to back track letters because we cannot complete that word.
+Instead we will count how many letters we backtracked, and distribute spaces starting from the left most space.
+There is a case where there is only 1 word in the chunk, in that case, we just append spaces to the right as the question
+states.
+
+Case 2 is we land on a space character. In that case, either we find the leftmost space in the chunk and add a space, or
+there is only one word again, so we just apppend that space to the right.
+
+Case 3 is perfect, so we just add that chunk.
+
+One edge case is when we reach the end. So we have to handle that by right justifying that row.
+
+In terms of tools. I learned .Indexof() is a stringbuilder method that finds that first occurence of a string, and
+returns -1 if that substring doesn't exist.
+
+***************************************************************************************
+
+
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        
+       List<String> res = new ArrayList();
+        
+        for(int i = 0; i < words.length; i++){
+            StringBuilder temp = new StringBuilder();
+            temp.append(words[i]);
+            int j = i + 1;
+            List<Integer> list = new ArrayList();
+            while(j < words.length && temp.length() + words[j].length() + 1 <= maxWidth){
+                list.add(temp.length());
+                temp.append(" ");
+                temp.append(words[j++]);
+            }
+            i = j - 1;
+            if(i == words.length - 1) justify(temp,list,maxWidth,true);
+            else justify(temp,list,maxWidth,false);
+            res.add(temp.toString());
+        }
+        return res;
+    }
+    
+    public void justify(StringBuilder temp, List<Integer> indexes, int maxWidth,boolean last){
+    
+               
+        if(indexes.size() == 0 || last == true){
+            while(temp.length() != maxWidth){
+                temp.append(" ");
+            }
+        }
+        else{
+            int i = 0;
+            int offset = 0;
+            while(temp.length() != maxWidth){
+                int spaceIndex = indexes.get(i) + offset;
+                temp.insert(spaceIndex," ");
+                indexes.set(i,indexes.get(i) + offset);
+                 i++;
+                offset++;
+                    if(i == indexes.size()){
+                        i = 0;
+                        offset = 0;
+                    }
+            }
+        }
+    }
+}
+
+***************************************************
+
+The idea behind this approach is much cleaner.
+
+1 - We iterate over each word and we append it to our current line if it does not result in going over maxwidth
+2 - After we have appended as many words that we can, we send the stringbuilder over to the helper which adds the spaces.
+
+
+The smalle things that must be payed attention to:
+1 - We must make sure to start from the appropriate word after moving and adding many words in the first method. AS in adjust
+i to the correct word so as to not repeat wordss.
+
+2 - We can use a list to track where all the spaces are at. However, when iterating over it, we must have an offset variable
+	because when we append spaces to earlier indecies, it changed the index of the later spaces.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

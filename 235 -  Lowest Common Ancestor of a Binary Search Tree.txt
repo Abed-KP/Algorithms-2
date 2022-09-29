@@ -1,0 +1,24 @@
+class Solution {
+
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+    while (true) {
+      if ((root == p || root == q) ||
+        (p.val > root.val && q.val < root.val) ||
+        (p.val < root.val && q.val > root.val)) return root;
+      else if (p.val > root.val && q.val > root.val) root = root.right;
+      else root = root.left;
+    }
+  }
+
+}
+
+
+
+
+*************************
+
+2 step Apprach:
+
+1 - Define the problem, break it down to simpler problem, then define those problems, until you can solve a sub-problem.
+2 - break down different cases and attack each individually.

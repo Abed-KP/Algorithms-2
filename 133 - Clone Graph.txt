@@ -1,0 +1,35 @@
+class Solution {
+   HashMap <Integer, Node> map = new HashMap <> ();
+    
+     public Node cloneGraph(Node node) {
+         
+         if(node == null) return node;        
+        Node currCopy = new Node(node.val, new ArrayList<Node>());
+        map.put(node.val, currCopy);
+        for(int i = 0; i < node.neighbors.size(); i++){
+            Node currNeighbor = node.neighbors.get(i);
+            if(map.containsKey(currNeighbor.val)) currCopy.neighbors.add(map.get(currNeighbor.val));
+            else currCopy.neighbors.add(cloneGraph(currNeighbor));
+        }
+        return currCopy;
+    }    
+}
+
+**************************************************
+
+What worked here was the 2 step approach process, and chasing it down to the root idea.
+
+1 - define the problem, every part of it, define the problems you are running into when trying to solve the problem,
+	and repeat until you reach a broken down problem that is easy to solve.
+
+2 - Define all the cases that you might diverge to.
+
+Explanation.
+
+In this proble the solution is This.
+
+Look at a node, see if its value has been visited, if not create a copy of that node, 
+then stast going through going through the node's neighbors, if the neighbor has been seen, that means it has been
+created, if not, then recursively apply everything that just haspened.
+
+Eventually, all nodes will have been seen, and things wwill start to get added and bubbling up.

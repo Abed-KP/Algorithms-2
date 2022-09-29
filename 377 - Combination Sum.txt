@@ -1,0 +1,23 @@
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target+1];
+        dp[0] = 1;
+        
+        for(int i = 1 ; i <= target; i++){
+            for(int j = 0; j < nums.length; j++){
+                if(i - nums[j] >= 0) dp[i] += dp[i-nums[j]];
+            }
+        }
+          return dp[target];
+    }
+}
+
+
+**************************
+
+This is very similar so coin change.
+
+The idea here is to use dynamic programming, and I noticed that because of "most possible combinations," in the question,
+as well as the fact that you can simply see that the number of possible combinations of "4" with [1,2,3] is the number of
+possible combinations of "4-1" "4-2" and "4-3", because in each, we are taking all the previously calucated combos and adding 
+this final number, which creates a unique new combo, but does not change the total amount of combos.

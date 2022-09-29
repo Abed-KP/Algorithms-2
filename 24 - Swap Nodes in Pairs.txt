@@ -1,0 +1,62 @@
+class Solution {
+    public ListNode swapPairs(ListNode head) {                     # Recursive
+  
+        if(head == null || head.next == null) return head;         
+        ListNode newhead = head.next;
+        ListNode N2 = head.next;
+        ListNode N1 = head;
+        adjacent_swap(N1,N2); 
+        return newhead;       
+    }
+    public ListNode adjacent_swap(ListNode N1, ListNode N2){
+        ListNode next_pair_starter = N2.next;
+        N2.next = N1;
+        if(next_pair_starter == null || next_pair_starter.next == null){
+            N1.next = next_pair_starter;
+        }
+        else{
+            N1.next = adjacent_swap(next_pair_starter, next_pair_starter.next);
+        }      
+        return N2;
+    }
+}
+******************************************************************************************************************************
+   class Solution {
+    public ListNode swapPairs(ListNode head) {                   # Iterative-Uh
+
+  if (head == null || head.next == null) return head;
+        ListNode newhead = head.next;
+        ListNode N2 = head.next;
+        ListNode N1 = head;
+
+        ListNode next_pair_starter = N2.next;
+
+        while (true) {
+            N2.next = N1;
+            if (next_pair_starter == null || next_pair_starter.next == null) {
+                N1.next = next_pair_starter;
+                break;
+            } else {
+                ListNode temp = N1;
+                N1 = next_pair_starter;
+                N2 = next_pair_starter.next;
+                next_pair_starter = N2.next;
+                temp.next = N2;
+            }
+        }
+        return newhead;
+    }
+
+}
+****************************************************************************************************************************
+
+The key is is these mindsets. I have to break down problems into every possible route. Once it is broken down like that,
+I can attack each route individually. In this case, the routes were the folowing,
+
+1 - Either we have 0 next nodes.
+2 - We have 1 next Node.
+3 - We have 2 next Nodes.
+
+We just act accordingly with each Iteration depending on what case we run into. 
+
+Note: Case 3 is essentially just repeating the whole thing over again, which is a good sign this is recursion. 

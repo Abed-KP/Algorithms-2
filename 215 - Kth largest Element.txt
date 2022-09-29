@@ -1,0 +1,170 @@
+Recursive Apporach:
+
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        
+        							I learned the quickselect algorithim, and its mega 
+        							powerful searching abilities in "k" problems
+        int start = 0;
+        int end = nums.length - 1;
+       return quickSelect(nums,start,end,k);
+        
+        
+
+    }
+    
+    
+    public int quickSelect(int[] array, int start, int end, int k){
+     
+          int p = - 1;
+     
+          
+           p  = partition(array,start,end);
+          
+          if (p == array.length - k){
+              return array[p];
+          }
+          else if( p < array.length - k){
+             return quickSelect(array,p+1,end,k);              
+          }
+          else{
+               return quickSelect(array,start,p-1,k);  
+          }
+          
+      
+        
+       
+        
+    }
+    
+    
+    
+    public int partition(int[] array, int start, int end){
+        
+        int pivot = end;
+        int pindex = start;
+        int i = start;
+        
+        while (i < pivot){
+            
+            if (array[i] <= array[pivot]){
+                swap(array,i,pindex);
+                pindex++;
+            }
+            i++;
+        }
+        
+        swap(array,pivot,pindex);
+        return pindex;
+    }
+    
+    
+    public void swap(int[] array , int a, int b){
+        
+        int temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*****************************************************************************************************************************
+
+Iterative approach:
+
+
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        
+        
+        
+        int start = 0;
+     
+        int end = nums.length - 1;
+       return quickSelect(nums,start,end,k);
+        
+        
+
+    }
+    
+    
+    public int quickSelect(int[] array, int start, int end, int k){
+     
+    
+            int p = 0;
+          do {
+              
+           p  = partition(array,start,end);
+          
+          if (p == array.length - k){
+             break;
+          }
+          else if( p < array.length - k){
+           start =  p+ 1;
+             
+              
+          }
+          else{
+               end = p - 1;
+          }
+          
+      
+          }while(p != array.length - k);
+       
+         return array[p];
+    }
+    
+    
+    
+    public int partition(int[] array, int start, int end){
+        
+        int pivot = end;
+        int pindex = start;
+        int i = start;
+        
+        while (i < pivot){
+            
+            if (array[i] <= array[pivot]){
+                swap(array,i,pindex);
+                pindex++;
+            }
+            i++;
+        }
+        
+        swap(array,pivot,pindex);
+        return pindex;
+    }
+    
+    
+    public void swap(int[] array , int a, int b){
+        
+        int temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
+    }
+}

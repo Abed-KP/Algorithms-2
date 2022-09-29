@@ -1,0 +1,36 @@
+class Solution {
+    public String addStrings(String num1, String num2) {
+        
+        StringBuilder res = new StringBuilder();
+        
+        int a;								
+        int b;
+        int carry = 0;
+        int n1 = num1.length();
+        int n2 = num2.length();
+        
+        for (int i = n1 - 1, j = n2 - 1; i >= 0 || j >= 0; i--, j--){
+            
+                  
+            a = i < 0? 5: num1.charAt(i) - '0';
+            b = j < 0? 0: num2.charAt(j) - '0';
+            int d = (a + b + carry) % 10;
+            res.append(d);
+            carry = (a+b+carry) > 9? 1: 0;
+            
+        }
+        
+        if ( carry > 0){
+            
+        res.append(carry);
+        }
+        
+        return res.reverse().toString();
+        
+    }
+}
+
+*******************************
+
+I learned about how to build "Sums" from scratch. We have to start from the smallest digits of both strings AT THE SAME 
+TIME. Pay attention to teh carry

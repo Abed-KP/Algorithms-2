@@ -1,0 +1,21 @@
+class Solution {
+    public int numDecodings(String s) {
+      if(s.charAt(0) == '0') return 0;
+      if(s.length() <= 1) return 1;
+      int[] dp = new int[s.length() + 1];
+      dp[0] = 1;
+      dp[1] = 1;
+      int insert = 2;
+      
+        for(int i = 1; i < s.length(); i++){
+            if(Integer.parseInt(s.substring(i,i+1)) > 0){
+                dp[insert] += dp[insert - 1];
+            }
+            if(Integer.parseInt(s.substring(i-1, i+1)) >= 10 && Integer.parseInt(s.substring(i-1, i+1)) <= 26){
+                dp[insert] += dp[insert - 2];
+            }
+            insert++;
+        }
+        return dp[s.length()];
+    }
+    }

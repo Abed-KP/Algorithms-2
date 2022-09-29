@@ -1,0 +1,48 @@
+    public boolean isValidBST(TreeNode root) {
+       return check(root,null, null);
+        
+    }
+    public boolean check(TreeNode root, Integer lower, Integer upper){
+        if(root == null) return true;   
+     
+        if(lower != null && root.val <= lower) return false;
+        if(upper != null && root.val >= upper) return false;
+        
+        return check(root.left,lower,root.val) && check(root.right, root.val, upper);
+        
+        
+    }
+   
+}
+
+
+****************************************
+
+Local Lesson Learned:
+
+I learned that to model Infinity instead of integer.max value, I can utilize null.
+Also, i learned that primitives cannot be null, but Integer can be instead of int.
+
+An example of infinity is if I am trying to set a lower bound to infinity, I can simply say
+
+if(lower != nul && root.val <= lower).
+or upper
+if(upper != null && root.val >= upper).
+
+The condition will terminate if lower or upper is null so we wil not get a null pointer exception.
+
+Global Lesson learned.
+
+So, in order for me to think of a solution like this on my own, I have to consider this.
+
+Whenever I have a case where 1 thing is changing, and one thing is not, and those two things might 
+switch every iteration, then I can simply pass in a new lower or upper bound depending on what changed.
+
+Here for isntance, once we go to the left tree, the lower bound stays infinity, but the upper bound becomes the
+current root. Then if we go right, the lower bound becomes the currente root, but the upper
+ bound remains what it is, the previous root.
+
+That was the key to this problem, but is a very helpful idea overall.
+
+
+

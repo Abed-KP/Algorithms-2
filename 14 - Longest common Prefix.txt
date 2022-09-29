@@ -1,0 +1,32 @@
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        
+        if (strs.length == 0 || strs == null)   return "";
+        
+        int min = Integer.MAX_VALUE;
+        StringBuilder res = new StringBuilder();
+        
+        for (int i = 0; i < strs.length; i++){
+            min = strs[i].length() < min? strs[i].length() : min;
+             if (strs[i].equals(""))   return "";
+        }     
+                    
+        for (int i = 0; i < min; i++){
+        char c = strs[0].charAt(i); 
+            for (int j = 0; j < strs.length; j++){
+             if (strs[j].charAt(i) != c )  return res.toString();  
+        }
+            res.append(c);
+        }
+        return res.toString();     
+    }
+}
+
+
+****************************************************
+
+I learned the imprtance of tracking edge cases ast every step. The importance of checking is array is null. Here
+
+for example, when I was finding the "min" lenght string for later, I checked to see if we encoutner an empty string,
+
+if we do, then I just end it right there because that is the answer.

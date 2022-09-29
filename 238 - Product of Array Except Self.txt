@@ -1,0 +1,75 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        
+        int[] left = new int[nums.length];	      I learned to use an approach where I create an "accumillation."
+        int[] right = new int[nums.length];	      In this case for example, I accumilate the left side of each
+        left[0] = 1;				     index in one array, asnd the right in another, or only the left
+        right[nums.length-1] = 1;		     and use a variable in the right.
+        
+        for(int i = 1; i < nums.length; i++){
+            
+            left[i] = nums[i-1] * left[i-1];
+            
+        }
+            
+        for(int i = nums.length - 2; i >= 0; i--){
+            
+            right[i] = nums[i+1] * right[i+1];
+            
+        }
+  
+        
+        
+        for (int i = 0; i < nums.length; i++){
+            
+            nums[i] = left[i] * right[i];
+        }
+        return nums;
+        
+    }
+
+    
+}
+
+
+
+**************************************************
+No space approach
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        
+       int n = nums.length;
+        
+        
+        int[] leftRep = new int[n];
+        leftRep[0] = 1;
+    
+        for(int i = 1; i < n; i++){
+            
+            leftRep[i] = nums[i-1] * leftRep[i-1];
+            
+        }
+                  
+        int r = 1;
+        for (int i = n - 1; i >= 0; i--){
+            
+            
+            
+            leftRep[i] = leftRep[i] * r;
+            r *=nums[i];
+        }
+        return leftRep;
+        
+    }
+
+    
+}
+
+
+
+    
+
+
+
+    

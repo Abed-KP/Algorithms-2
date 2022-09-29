@@ -1,0 +1,45 @@
+class Solution {
+    public boolean isHappy(int n) {
+        if(n == 1) return true;
+        
+        HashSet<Integer> set = new HashSet();
+        int sum = 0;
+        
+        while (sum != 1){
+            sum = 0;
+            while( n != 0){
+                sum += Math.pow(n % 10, 2);
+                n /= 10;
+            }
+            if(set.contains(sum)) return false;
+            set.add(sum);     
+            n = sum;
+        }
+       return true;
+    }
+}
+
+*************************************************************
+Here I learned to use floyds tortoise and hare regardless of the 'Duplicate problem'. Any time I hear
+or think the word "Cycle," I must think "Floyds Cycle Detection Algorithm."
+*************************************************************
+class Solution {
+    public boolean isHappy(int n) {
+    int hare = n;
+    int tortoise = n;            
+           do{
+            tortoise = getNext(tortoise);
+            hare = getNext(getNext(hare));
+           }while(hare != tortoise);        
+        
+        return hare == 1;                 
+    }    
+    public int getNext(int n){
+        int sum = 0;
+        while(n != 0){
+            sum += Math.pow(n % 10,2);
+            n /= 10;
+        }
+        return sum;
+    }
+}

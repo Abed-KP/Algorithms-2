@@ -1,0 +1,58 @@
+class Solution {
+    public void moveZeroes(int[] nums) {
+      
+        int zeroCounter = 0;
+        int switchIndex = 0;                                     I learned to think about manipulating the array while
+         					             I am traversing it, and try to find a way utilizing counters
+        for(int i = 0; i < nums.length; i++){		     or something to bebale to still acconmplish the task, despite
+							     changing certain values.
+            									
+            if (nums[i] == 0){
+                zeroCounter++;
+            }
+            else{
+                nums[switchIndex] = nums[i];
+                switchIndex++;
+            }           
+        }
+        for(int j = 1; j <= zeroCounter; j++){
+            nums[switchIndex] = 0;
+            switchIndex++;
+        }
+        
+    
+
+
+    }
+
+}
+
+
+class Solution {
+    public void moveZeroes(int[] nums) {
+      
+        int zeroCounter = 0;
+        int switchIndex = 0;                                This solution is worth noting, I moved all the non zeros to
+         						    the begining, and filled the rest with 0s.	          
+        for(int i = 0; i < nums.length; i++){		   
+							     
+            									
+            if (nums[i] == 0){
+                zeroCounter++;
+            }
+            else{
+                nums[switchIndex] = nums[i];
+                switchIndex++;
+            }           
+        }
+        for(int j = 1; j <= zeroCounter; j++){
+            nums[switchIndex] = 0;
+            switchIndex++;
+        }
+        
+    
+
+
+    }
+
+}

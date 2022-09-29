@@ -1,0 +1,30 @@
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        
+        
+        int x = n;
+        int insertionPointer = nums1.length - 1;
+        for(int i = 0; i < x; i++){
+            
+            if( m - 1 >= 0 && nums1[m - 1] > nums2[n-1]){
+                nums1[insertionPointer] = nums1[m-1];
+                m--;
+                i--;
+            }
+            else{
+                nums1[insertionPointer] = nums2[n-1];
+                n--;
+            }
+            insertionPointer--;
+        }
+    }
+}
+
+
+**********************************************
+
+This question is a reminder of the power of traversing an array backwards sometimes. Also, there is this trick to learn.
+
+You can dump anything in else. If the special case that will break the program will happen only in the first case,
+
+then you can add && operators to check for the breaking case in the if statements, and then dump it on the else portion.

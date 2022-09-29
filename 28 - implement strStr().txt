@@ -1,0 +1,21 @@
+class Solution {
+    public int strStr(String haystack, String needle) {
+       
+       if( needle.length() == 0){
+          return 0;
+       }        
+        for(int i = 0; i < haystack.length(); i++){
+            if(haystack.charAt(i) == needle.charAt(0) && haystack.length() - i >= needle.length()) {
+              if (haystack.substring(i,i + needle.length()).equals(needle) ) return i;                
+            }
+        }
+        return -1;
+    }
+}
+
+*********************************************
+
+I learend that the substring function takes the start index (the one I am on) and the second parameter is the end, so if we
+are going to the end of the string, we set the index to the length of the string. This means it has a " -1 " kind of
+functionality. First solution invlovesjust computing a substring whenever we encoutner a character matching the first
+character of the needle, adn checking if it matches the needle.

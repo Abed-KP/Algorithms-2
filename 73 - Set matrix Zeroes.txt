@@ -1,0 +1,66 @@
+class Solution {
+    public void setZeroes(int[][] matrix) {
+     
+    boolean column = false;
+    boolean row = false;
+        for (int i = 0; i < matrix.length; i++){
+            if (matrix[i][0] == 0) column = true;
+        }
+        for (int i = 0; i < matrix[0].length; i++){
+            if (matrix[0][i] == 0) row = true;
+        }
+        
+   
+    for (int i = 0; i < matrix.length; i++){
+        for(int j = 0; j < matrix[i].length; j++){
+            if(matrix[i][j] == 0){
+                matrix[i][0] = 0;
+                matrix[0][j] = 0;
+            }
+        }
+    }
+        for (int i = 1 ; i < matrix.length; i++){
+            for(int j = 1; j < matrix[i].length; j++){
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) matrix[i][j] = 0;
+            }
+        }
+        
+        if (column == true){
+          for (int i = 0; i < matrix.length; i++){
+            matrix[i][0] = 0;
+        }
+        }
+        if (row == true){
+          for (int i = 0; i < matrix[0].length; i++){
+           matrix[0][i] = 0;
+        }
+        }
+    }
+}
+
+********************************************************************************************
+
+I learned to find ways where I can manipulate an array, while taking consideration the fact that we don't want
+
+our manipulations to affect our array as we see it when we are traversing later elements. Here for example, if we just
+
+set rows and columns to zero as we go,  then we will see zeroes down the road that weren't originaly zeros, and that 
+
+throws off the whole solution. Therfore, "up" and "back" always represent things we have already checked. So the solution
+
+is  that everytimwe we see a zero, we set the first element in the column (up) and the first element in the row (back)
+
+to zero. This we, we can keep track of whether that columns/row will have to become zeroes. Next, we have tostart traversing 
+
+from matrix[1][1] because the first row and columns represent our zeros. Then we change each element individuals as we go
+
+to 0 depending on whether matrix[i][0] or matrix[0][j] are zeroes. finally we have to deal with the first column and the
+
+first row. We have zeroes there now, so they will become zeroes everytime in this case, how do we know if they have to be 
+
+all zero. The answer is to create boolean values for then first row and another for the first columns and
+
+traverse them first, and check if they have zeroes in them, if they do, set the booleans to true, and then in the end,
+
+set the ones that are true to all zeroes. 
+

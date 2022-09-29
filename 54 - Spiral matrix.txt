@@ -1,0 +1,57 @@
+class Solution {
+    public List < Integer > spiralOrder(int[][] matrix) {
+     List<Integer> spiralPrint = new ArrayList();
+        if(matrix.length == 0 || matrix[0].length == 0) return spiralPrint;
+        
+     int rStart = 0, rEnd = matrix.length, cStart = 0, cEnd = matrix[0].length;
+        
+        while(rStart < rEnd && cStart < cEnd){
+            int r = rStart, c = cStart;
+            for(c = c; c < cEnd - 1; c++) spiralPrint.add(matrix[r][c]);
+            for(r = r; r < rEnd ; r++) spiralPrint.add(matrix[r][c]);
+            if(rStart < rEnd - 1 && cStart < cEnd - 1){
+                for(c = c - 1, r = r - 1; c > cStart; c--) spiralPrint.add(matrix[r][c]);
+                for(r = r; r > rStart; r--) spiralPrint.add(matrix[r][c]);
+            }
+            rStart++; 
+            rEnd--;
+            cStart++;
+            cEnd--;
+        
+        }
+        return spiralPrint;
+    }
+}
+
+********************************************************************
+
+Again, what proving to be the key to solving Leetcode problems are therse 2 steps.
+
+1 - Define the problem,understand what need to happen at every step, independant of code. Note down observations on the
+ side to reference.
+
+2 - After understanding the problem, break it down to every case that it can diverge into, and then note down what happens
+    in every case.
+
+
+This is a matrix problem, and in matrix problems, there are 3 cases.
+
+Case 1: Rows == Columns
+Case 2: Rows < Columns
+Case 3: Rows > Columns.
+
+The strategy here was to take the simplest case. Which is Case 1.
+
+I then observed what happens spiral after spiral and saw that after every spiral, we go 1 Columns less, and 1 row
+less. This allowed me to figure out the general test cases.I also manually traversed in a spiral way to beable
+to know the boundaries of my variables and ranges of my loops.
+
+Next,  I took the extreme cases of case 2 & case 3. What if we have 1 column and
+many rows? OR What if we have 1 row and many columns? I observed  what happens and realized that when going backwards or 
+upwards, we have to make sure that we actually have an extra row or column to go back words and upwards.
+
+The idea is that if there is only 1 row or 1 column, left, then we wil beable to traverse everything in the 
+right or down movements. This is why we have that if statement when going left and upwards. So we do not print
+already printed elements. 
+
+One important tidbit here is that you have to paya ttention not to print corners twice. 

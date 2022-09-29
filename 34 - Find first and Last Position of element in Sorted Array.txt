@@ -1,0 +1,113 @@
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        
+        int[] range  = new int[2];
+        int start = 0;
+        int end = nums.length;
+        range[0] = leftBinarySearch(nums,start,end,target);
+        range[1] = rightBinarySearch(nums,start,end,target);
+        return range;    
+    }
+    
+     
+        public int leftBinarySearch(int[] nums, int start, int end, int target){
+             
+        
+        int leftMost = -1;
+        while (start < end){
+        
+               int mid = start + (end-start)/2;
+            
+            if ( nums[mid] == target){
+                leftMost = mid;
+                 end = mid;
+            }
+            else if(nums[mid] < target) {
+                start = mid + 1;             
+            }
+            else {
+                end = mid;
+            }
+             
+        }
+        return leftMost;
+    
+    }
+      
+    public int rightBinarySearch(int[] nums, int start, int end, int target){
+                   
+        int rightMost = -1;
+        while (start < end){
+        
+             int mid = start + (end-start)/2;
+            
+            if ( nums[mid] == target){
+                 rightMost = mid;
+                 start = mid + 1;
+            }
+            else if(nums[mid] < target) {
+                start = mid + 1;             
+            }
+            else {
+                end = mid;
+            }
+             
+        }
+        
+       return rightMost;
+    }  
+       
+}
+***************************************************************************************************************************
+
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        
+        int[] range  = new int[2];
+        int start = 0;
+        int end = nums.length;
+        range[0] = BinarySearch(nums,start,end,target,0);
+        range[1] = BinarySearch(nums,start,end,target,1);
+        return range;    
+    }
+    
+     
+        public int BinarySearch(int[] nums, int start, int end, int target,int key){
+             
+        
+        int edge = -1;
+        while (start < end){
+        
+            int mid = start + (end-start)/2;
+            
+            if ( nums[mid] == target){
+               edge = mid;
+                if(key == 1){
+                    start = mid + 1;
+                }
+                else {
+                 end = mid;
+                }
+            }
+            else if(nums[mid] < target) {
+                start = mid + 1;             
+            }
+            else {
+                end = mid;
+            }
+             
+        }
+        return edge;
+    
+    }
+      
+}
+*******************************************************************************************************************************
+
+ I learned to use BinarySearch very Concretly, and I learned that sometimes, all 
+ you have to do is adjust it in certain ways. We just had write it twice, one to find the left most, and one for the
+ right most target. Alternatively, we also could have written it once, and passed in a key to tell us which way to 
+ search. If the key is 0, we look for the leftMost target, if it is 1, we look for the right most target.
+
+
+

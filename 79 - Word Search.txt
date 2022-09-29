@@ -1,0 +1,46 @@
+class Solution {
+    boolean[][] visited;
+    public boolean exist(char[][] board, String word) {
+        this.visited = new boolean[board.length][board[0].length];
+        
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length; j++){
+                if(word.charAt(0) == board[i][j] && search(i,j,board,1,word)) return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean search(int i, int j, char[][] board, int length, String word){
+    if(i < 0
+       || i >= board.length
+       || j < 0 
+       || j >= board[0].length
+       || word.charAt(length-1) != board[i][j] 
+       || visited[i][j] == true) return false;
+        
+        if(length == word.length()) return true;
+        
+        visited[i][j] = true;        
+        
+        if(
+           search(i+1,j,board,length+1,word) 
+        || search(i-1,j,board,length+1,word) 
+        || search(i,j+1,board,length+1,word) 
+        || search(i,j-1,board,length+1,word) 
+        ) return true;
+        
+        visited[i][j] = false;
+        return false;
+    }
+}
+
+*******************************************************************************
+
+The idea here is to use DFS the same as the 'Number of islands question'.
+
+The reason I was not able to get the full asnwer was because I was unaware of the backtracking idea.
+I wanted to keep track of the visited cells for each, and I didn't realize I could do that with the backtracking concept.
+
+If I record that I visited it in the visited matrix. If all side explorations fail, then i return false, but I also mark that cell
+as unvisited.That is the key to this question.

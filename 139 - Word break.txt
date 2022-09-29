@@ -1,0 +1,45 @@
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {        
+       
+        HashSet<String> dictionary = new HashSet(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for(int i = 1; i <= s.length(); i++){
+            for(int j = 0; j < i; j++){
+                if(dp[j] && dictionary.contains(s.substring(j,i))){
+                    dp[i] = true;
+                    break;
+                }                
+            }
+        }
+        return dp[s.length()];
+    }
+}
+
+
+*************************************************************************************
+
+
+The solution here uses dp.
+
+if dp[i] is true, that means the substring(j,i) satisfies the questio for the local case.
+
+Therefore, to satisfy the question for the general case, we have to make sure that dp[j] is true, so that we can mark dp[i]
+be true.
+
+Simple example:
+
+"leetcode" [l, eet, code]
+
+dp[0] is true
+
+dp[1] is npw true because we know that everything up unti;; l is true, and the substring(0,1) also satisfies the question.
+The next substring that will satisfy the question is (1,4), "eet" satisfies the condition, and we know that dp[1] had already
+satisfied it, so dp[4] now satisfies in completely.
+
+Next substring to satisfy is (4,8), since that is a word, and we know that dp[4] has satisfied the question, we know the question
+is satisfied up to dp[8].
+
+A tip to solving dynamic programming questions this is to ask yourself the same exact question but for a super trivial case.
+

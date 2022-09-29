@@ -1,0 +1,51 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+        if(nums.length == 1) return true;
+        int valid = nums.length - 1;
+        
+        for(int i = valid - 1; i >= 0; i--){
+            int requiredJump = valid - i;
+            int availableJumps = nums[i];
+            if(availableJumps >= requiredJump) {
+                valid = i;
+            }
+        }
+        return valid == 0;
+    }
+}
+
+********************************************************
+
+Solving this question required impeccable implementation of the two step approach.
+
+Again, the 2 step approach is as follows.
+
+1 - Define the problem, then  define the problems that arise when trying to solve the problem, then define the ones
+after that, until you are broken down to a point where you can solve that problem. 
+
+2 - Break down the problem into all cases it can diverge to
+
+In this case, the dialogue should go 
+like this
+
+What do I want?
+
+A: I want to check and see if i can make it to the end if I start at the first index. I can jump up to nums[i] distance.
+
+here is where the case breakdown comes in handy.
+
+Case 1: I can jump all the way to the end, in which case, that works.
+Case 2: I can jump somewhere that leads me to beaing able to jump to the end.
+Case 3: I can't jump anywhere that leads me to jump to the end.
+
+Now, Case 2 and 3 bring up another problem.
+
+How do I know if where I am jumping too will lead me to the end or not.
+
+Simple, Just start from the end, and build on top of it going back.
+
+Find the lastest index that can actually make it to the end, then keep going back and trying to see if something can make
+it atleast to that index. We only need to make it to the earliest index that can reach the end. If x can reach y and y can
+reach z, and z can reach the end, then x can reach the end.
+
+that is how you break it down!

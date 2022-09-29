@@ -1,0 +1,53 @@
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        HashMap<TreeNode,TreeNode> map = new HashMap();    
+        HashSet<TreeNode> setp = new HashSet();
+        HashSet<TreeNode> setq = new HashSet();
+        findPath(root, null, map);
+        while(p != null || q != null){
+           if(p != null ) setp.add(p);
+           if(q != null ) setq.add(q);
+            if(setp.contains(q)) return q;
+            if(setq.contains(p)) return p;
+            if(p != null) p = map.get(p);
+            if(q != null) q = map.get(q);            
+        }
+        return root;
+
+        
+    }
+
+    public void findPath(TreeNode root, TreeNode prev, HashMap<TreeNode,TreeNode> map){
+        if(root.left != null) findPath(root.left, root, map);
+        map.put(root,prev);
+        if(root.right != null)  findPath(root.right, root, map);
+}
+}
+
+**************************************************************************************
+
+
+
+Local Lesson learned:
+
+Again, in binary trees, is is important to think about how different traversals can benifit you in the "work stage."
+
+Inorder, postOder, and preOrder represent a DFS.
+Level Order represents a BFS.
+
+basic example of "work" is just printing the node,
+however, in this case, the "work" was mapping the current node to the previous node.
+
+This way, we can reach the root from any node by continously follwing the mapped 'prev' value.
+
+Then we proceed to add the nodes starting from P and Q to respecrtive HashSet, the moment one of the sets contains
+a node from the other, that means that this newly updated other has climbed up to the lowest common ancestor by folowwing
+its prev values.
+
+
+Global lesson;
+
+Sometimes, you do not need a direct list to find previious values.
+
+instead if you can map each element to its previous value, then you can have the list that way.

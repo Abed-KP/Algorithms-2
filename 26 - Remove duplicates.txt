@@ -1,0 +1,24 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        
+        if (nums == null || nums.length == 0){	    	I learned another implementation of the two pointer approach.
+            return 0;					I had one pointer point to the next index i was going to insert
+        }						an element into, whhile other pointer traversed the array checking
+        						for valid execution.
+        int newindex = 1;
+        int curr = nums[0];        
+        
+        for (int i = 0; i < nums.length; i++){
+            
+            if (nums[i] != curr){
+                curr = nums[i];
+                nums[newindex] = nums[i];
+                newindex++;
+              
+            }
+            
+        }
+        
+         return newindex;
+    }
+}

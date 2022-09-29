@@ -1,0 +1,31 @@
+class Solution {
+    public int maxArea(int[] height) {
+        int  maxArea = 0;
+        int p1 = 0;
+        int p2 = height.length - 1;
+        
+        while(p1 < p2){
+            maxArea = Math.max(Math.min(height[p1],height[p2]) * (p2 - p1), maxArea);
+            if(height[p1] < height[p2]){
+                p1++;
+            }
+            else if(height[p1] > height[p2]){
+                p2--;
+            }
+            else {
+                p1++;
+                p2--;
+            }
+        }
+        return maxArea;
+    }
+}
+
+******************************
+
+I was reminded of paying more atetntion to certain iodeas that i have that don't fail in theory yet/. In this case,
+I got the idea of having a two pointer solution where one starts at the front, and the other at the end. This results
+in this idea that we have already calculated the best width scenario. And then we take a greedy approach and always move
+the lesser counter. One side will always limit the other here, so sometimes if front > end, we move front, because otehrwise, 
+front will limit the Area, if they are equal, we move both, becaause either will just limit the area. We always save the area, so
+that we are able to save the best scenario.

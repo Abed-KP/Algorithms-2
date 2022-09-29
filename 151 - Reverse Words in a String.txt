@@ -1,0 +1,74 @@
+class Solution {
+    public String reverseWords(String s) {
+        
+        if (s.equals(" ")){
+            return " ";
+        }
+        
+        StringBuilder rev = new StringBuilder();
+        StringBuilder word = new StringBuilder();
+        int n = s.length() - 1;
+        boolean spaceaval = true;
+        
+            while (n >= 0){
+            if(s.charAt(n) != ' ' ){
+                break;
+            }
+            else {
+                n--;
+                }
+            }     
+        
+        for (int i = n; i >= 0; i--){
+              
+            char c = s.charAt(i);
+            
+            if (c != ' '){
+                word.append(c);
+                spaceaval = true;
+                if ( i - 1 < 0)   rev.append(word.reverse().toString());
+            }
+            else if (c == ' ' && spaceaval == true){
+                rev.append(word.reverse().toString());
+                word.delete(0, word.length());
+                rev.append(' ');
+                spaceaval = false;
+            }
+            else {
+                continue;
+            }                        
+        }
+        
+        String ans = rev.toString();
+        if (ans.charAt(ans.length() - 1) == ' ') {
+            rev.deleteCharAt(ans.length() - 1);
+            ans = rev.toString();
+        }
+        return ans;
+        
+     
+    }
+}
+
+****************************************************************************************************
+
+What helped me solve this problem was the the strategy where I break it down, to the smallest steps, and 
+
+say it out aloud with English. I start out by passing all the spaces at the end pf the string till I reach the first
+
+non space character. Then I start adding that word character by character to a StringBuilder 'word'. Then I have a boolean
+
+telling me if the space I reached is the first space. Then when I reach the first space, I add the word to the to
+
+main StringBuilder "rev". I have to reverse word as well because i started traversing from the end of the String. Then
+
+I add a space, and my boolean value will make sure to flag and skip all extra spaces. 
+
+2 edge cases
+ 
+if there are extra spaces in the end, I have to check the last character in the string builde, and delete the last one
+
+I added.
+
+Other edge case is if there are no spaces in the end. I have to make sure to add the last word. 
+

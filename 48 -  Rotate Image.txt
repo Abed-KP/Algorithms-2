@@ -1,0 +1,40 @@
+class Solution {
+    public void rotate(int[][] matrix) {
+        transpose(matrix);
+        reverse(matrix);
+    }
+    
+    public void transpose(int[][] matrix){
+        for(int i = 0; i < matrix.length; i++){
+          for(int j = i + 1; j < matrix.length; j++){
+              int temp = matrix[i][j];
+              matrix[i][j] = matrix[j][i];
+              matrix[j][i] = temp;
+          }
+        }
+    }
+    public void reverse(int[][] matrix){
+        for(int[] row : matrix){
+            int i = 0, j = matrix.length - 1;
+            while(i < j){
+                int temp = row[i];
+                row[i] = row[j];
+                row[j] = temp;
+                i++;
+                j--;
+            }
+        }
+    }
+}
+
+***************************************************
+
+The idea here is from linear algebra.
+
+A matrix rotated by 90 degrees to the right can be obtained by doing these 2 steps;
+
+1 - Transpose the matrix across a diagonal that goes from the start cell to the end cell.
+2 - reverse the matrix from left to right -- As in reflect it.
+
+
+For the future, run through the transpose method to seee how the code actually does it.

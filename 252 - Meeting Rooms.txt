@@ -1,0 +1,33 @@
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        if(intervals.length <= 1) return true;
+        Arrays.sort(intervals,new Comparator<int[]>(){
+            public int compare(int[] a, int[] b){
+                return a[0] - b[0];
+            }
+        });
+        
+        int i = 0;
+        int j = 1;
+        
+        while(j < intervals.length){
+            if(intervals[j][0] < intervals[i][1]){
+                return false;
+            }
+            else{
+                i = j;
+                j++;
+            }
+        }
+        return true;
+       
+    }
+}
+
+***********************************************
+
+I was reminded of the power of Comparators. Also, a good technique is to learn to "Corner" your program int a wall, so that
+
+you can use if statements to generate the right answer. Cornering leads to an 'either this' and "if this happens, then
+
+that can't happen, and nothing else can happen." Thinking like this allows you to solve so many problems.

@@ -1,0 +1,28 @@
+class Solution {
+    int max = 0;
+    public int maxDepth(TreeNode root) {
+        if(root == null) return 0;
+        checkDepth(root,1);
+        return max;
+    }
+    public void checkDepth(TreeNode root, int currDepth){
+        if(root.left == null && root.right == null) max = Math.max(max,currDepth);
+        if(root.right != null) checkDepth(root.right, currDepth + 1);
+        if(root.left != null) checkDepth(root.left, currDepth + 1);
+    }
+}
+
+
+****************************************************************************************
+
+In this Question, I learned to consider what I want to do when traversing Binary trees. 
+
+In this case, we simply wasnt to see how deep we can go, therfore, we jnust take every path in the tree.
+
+I tlearned to think of recursion as "a set of policies" that will execute in a current call, and result in a new path.
+
+In this question specifically, at every point, we have to go left and right.. So each recursion will make a left and right call.
+
+It does not really matter if we are making all the right calls first, or the left calls first. At the end of the day,
+
+we have to visit everything and wil visit everything .

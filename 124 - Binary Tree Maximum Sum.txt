@@ -1,0 +1,51 @@
+class Solution {
+    int max = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        findPath(root);
+        return max;
+
+    }
+
+    public int findPath(TreeNode root) {
+        if (root == null) return 0;
+
+        int currNodeValue = root.val;
+        int leftTreeMax = findPath(root.left);
+        int rightTreeMax = findPath(root.right);
+
+        int maxSubTree = Math.max(leftTreeMax, rightTreeMax);
+int temp = Math.max(currNodeValue, Math.max(maxSubTree + currNodeValue, leftTreeMax + rightTreeMax + currNodeValue));
+        max = Math.max(max, temp);
+
+        return Math.max(maxSubTree + currNodeValue, currNodeValue);
+    }
+}
+
+********************************************
+
+Again, What allowd me to solve this problem is the 2 step approach.
+
+
+			Do All this totally devoid of CODE.
+
+1 - Define the problem, and what has to be done. Break it down and define what has to be done at each step.
+
+	As you run into problems and say "oh but I can't do this becauuse of that" the second step comes in.
+
+2 - Seperate all cases that the problem can Diverge into, and tackle each case individually.
+
+
+
+In this problem, the key was looking at the tree, and realizing that the answer is this. 
+
+Either we take our right sub tree, or our left subtree, and we pass that to that parent. 
+Or we take them both and see if that and the root beats the Max.
+
+Once we take both our subtrees, then we cannot move up anymore. Therefore, we check both our subtrees and see 
+if it beats the max. Even if it does, we still pass up the greater sub tree to see if we could possibly beat
+that new max. We can only pass up one sub treem, so we choose the greater one to make our chances best.
+
+If our current node is greater than its left subtree and its right subtree, then we only pass up the current node,
+and that means that the path would start there.
+
+

@@ -1,0 +1,36 @@
+class Solution {
+    public int maxProduct(int[] nums) {
+        
+        int currMinStreak = nums[0];
+        int currMaxStreak = nums[0];
+        int result = nums[0];
+        
+        for(int i = 1; i < nums.length; i++){
+            int temp = currMinStreak;
+            currMinStreak = Math.min(nums[i], Math.min(nums[i] * currMinStreak, nums[i] * currMaxStreak));
+            currMaxStreak = Math.max(nums[i], Math.max(nums[i] * currMaxStreak, nums[i] * temp));
+            result = Math.max(currMaxStreak,result);
+        }
+        return result;
+    }
+}
+*******************************************************************
+
+This was a DP Problem that was an extension of the Maximum sum subarray.
+
+My strrategy of breaking down problems into sub problems almost worked here, or atleast led me down the right path.
+
+1 - Break down the problem, say out loud what you are trying to do, and then break it down, then say out loud again what
+	you are trying to do,r inse adn repeat.
+
+2 - Determine all  cases the the question can diverge to.
+
+Here, I could hvae reached the asnwer if I came to ther ealization, that whenever i encounter a new number, I have to 
+check ande see if I multiply the current Max streak AND THE MIN STREAK, what do I get? 
+
+In other words, I have to keep track of the minimum contigous array and not only the maximum. This is because if the
+streak becomes a low negative number, then all I need is another negative number to give me a very high positive number.
+So whenever I encounter a negative number, I want to beable to know my max minimum streak, because the lower that streak
+is, the higher the product is after I multiply with a negative number.
+
+To test in future, draw out a bunch of cases, and track what happens with this strategy/

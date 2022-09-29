@@ -1,0 +1,16 @@
+class Solution {
+        List<List<Integer>> levels = new ArrayList();
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        getLevels(root);
+        return levels;
+    }
+    public int getLevels(TreeNode root){
+        if(root == null) return 0;
+        int level = Math.max(getLevels(root.left), getLevels(root.right));
+        if(levels.size() < level + 1){
+            levels.add(new ArrayList());            
+        }
+        levels.get(level).add(root.val);
+        return level + 1;
+    }
+}

@@ -1,0 +1,40 @@
+class Solution {
+    int index = 0;
+    int[] pre;
+    HashMap<Integer,Integer> map = new HashMap();
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        for(int i = 0; i < inorder.length; i++) map.put(inorder[i],i);
+        pre = preorder;
+        return construct(0,inorder.length - 1);
+    }
+    
+    public TreeNode construct(int start, int end){
+        TreeNode curr = new TreeNode(pre[index]);
+        int inorderIndex = map.get(pre[index]);
+        if(inorderIndex - start > 0) {
+            index++;
+            curr.left = construct(start,inorderIndex-1);
+        }
+        if(end - inorderIndex > 0){
+            index++;
+            curr.right = construct(inorderIndex+1,end);
+        }
+        return curr;
+   }
+}
+
+******************************************************
+
+I managed to understand this problem by breaking it down step by step based on what is happening, and laying out all
+the observations that I could make at every step.
+
+1 - I realized that the first element of pre-order can tell me where the root of the tree is in, in order.
+2 - After i find my root in the inOrder, I realized that if there are any elements to the left, then a left subtree exists
+3 - If a left subtree exists, then I can find the root of that subtree by finding the next element in the preOrder
+	This is because in PreOrder, we print the root of our current tree, then we visit the left subtree, then we print
+	that root.
+4 - Next, I visit that new root, but I also set boundaries. If I am visitng the left tree, then my left remains what it is
+	But my right, becomes the current inOrder index I am on -1.
+5 - after I check for left children, the recursin will keep incrementing the index variable until we run out of left trees.
+	By the time we get to the right tree check and recursive call, the index variable is already pointing to my right
+	tree.

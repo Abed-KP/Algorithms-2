@@ -1,0 +1,55 @@
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+       ListNode newhead =  reverse_list(head);
+        ListNode curr = newhead;
+        ListNode prev = null;
+        int count = 1;
+        if(n == 1) return reverse_list(newhead.next);        
+        while(count != n){
+            prev = curr;
+            curr = curr.next;
+            count++;
+        }
+        prev.next = curr.next;
+        return reverse_list(newhead);
+    }
+    
+    public ListNode reverse_list(ListNode head){
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        while(curr != null){
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}
+************************************************
+The key point to learn here is that if you are trying to reach the end of something, and you cannot backtrack, and you
+want to do it in one go. You can reach a specific point by havinng two pointers start at differet times, as below, or 
+having one pointer traverse 2x as fast to reach the halfway point. Also, creating a new dummy head might solve edge cases.
+************************************************
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode first = dummy;
+        ListNode second = dummy;
+        int count = 0;
+        while(count != n+1){
+            first = first.next;
+            count++;
+        }
+        
+        while(first != null){
+            first = first.next;
+            second = second.next;
+        }
+        second.next = second.next.next;
+        return dummy.next;
+        
+    }
+}

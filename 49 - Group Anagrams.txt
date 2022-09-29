@@ -1,0 +1,76 @@
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String,List<String>> map = new HashMap();		
+        ArrayList<List<String>> list = new ArrayList();
+        for(int i = 0; i < strs.length; i++){
+            sort_and_Map(strs[i], map);
+        }
+        for(Map.Entry<String,List<String>> entry : map.entrySet()){
+            list.add(entry.getValue());
+        }
+        return list;
+    }
+    
+    public void sort_and_Map(String original, HashMap<String,List<String>> map){
+        char[] chars = original.toCharArray();
+        Arrays.sort(chars);
+        String sorted = new String(chars);
+        if(map.containsKey(sorted)){
+            map.get(sorted).add(original);
+        }
+        else{
+            map.put(sorted, new ArrayList());
+            map.get(sorted).add(original);
+        }
+        
+    }
+}
+
+
+***********************************************************
+I learned to really consider what my HashMasp points too, that is CRUCIAL! Also, I learned how to sort strings, by converting
+to array first, and then sorting the array, and passing it back to string. There is this idea where we can use 
+a manipulated value to achieve a similarity quality between a specific set of entities, then if after the manipulation
+the new entity is the same, then we can add the old entity to its group.
+
+In other words, here, we sort each string, and then check itf its in the Hashmap, if it is, we add the original string to
+that list. Any list of anagrams sorted produces the same string over and over. In the end, loop over the map, and return
+all lists. 
+
+
+***************************************************************************************************************************
+
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        
+        List<List<String>> list = new ArrayList();
+        HashMap<String,int[]> map = new HashMap();		### Crazy Comparison way
+        for(int i = 0; i < strs.length; i++){
+            map.put(strs[i], new int[26]);
+            for(int j = 0; j < strs[i].length(); j++){
+                map.get(strs[i])[strs[i].charAt(j) - 'a']++;
+            }
+        }
+search:        for(int i = 0; i < strs.length; i++){
+            if(list.isEmpty()){
+                list.add(new ArrayList());
+                list.get(0).add(strs[i]);
+            }
+            else{
+                for(int j = 0; j < list.size(); j++){
+                    if(strs[i].length() != list.get(j).get(0).length()) continue;
+                    if(Arrays.equals(map.get(strs[i]), map.get(list.get(j).get(0)))){
+                        list.get(j).add(strs[i]);
+                        continue search;
+                    }
+                }
+                list.add(new ArrayList());
+                list.get(list.size() - 1).add(strs[i]);
+            }
+        }
+        return list;
+    }
+}
+

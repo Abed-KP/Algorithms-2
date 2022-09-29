@@ -1,0 +1,42 @@
+class Solution {
+    public int uniquePaths(int m, int n) {
+        
+        if(m == 1 || n == 1) return 1;
+        
+        int[][] dp = new int[m][n];
+        for(int i = 0; i < m; i++) dp[i][0] = 1;
+        for(int i = 0; i < n; i++) dp[0][i] = 1;
+        
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+}
+
+******************************************
+
+I just solved my first Dynamic programming medium by recoginizing the DP pattern.
+
+1 - I thought about DFSing into all paths. path 1 is go right, path 2 is go down, path 3 is right from right, path 4 is
+down from right, path 5 is right from down... etc
+
+2 - At thay point, I realized that I am solving the same cells over and over again, So memoization popped up, and thus
+	top down recursion popped into my head.
+3 - I realized that the cell to the right of cell[0][0] has a certain amount of unique paths, and so does the cell down.
+
+4 - Thus the answer to unique paths of cell[0][0] is 'right  added to all the unique paths of the right cell' and 'down 
+	added to all the unique paths of the down cell.'
+5 - Thus the number of unique paths from cell[0][0] is the numer of uninque paths from the right cell + the down cell.
+
+6 - Then, we realize that we do not know the unique paths of the right and down cell, So we ask the same question of those
+	cells, and now it is clearly Top down DP
+
+7 - The base case of top down is the final cell, which asks the question 'How many unique paths to myself going down
+	and right only. The answer is 1 path, as in make 0 steps. That answer bubbles back.
+
+8 - Finally, we recognize the bottom up. The first row and first column either do not have a left or an up. So the answer
+ 	is " 0 plus previous available cell" in order to calculate unique paths to cell[0][0]. Then we build 
+	from cell[1][1], until we reach the last cell, which will be our answer.

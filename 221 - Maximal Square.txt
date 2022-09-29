@@ -1,0 +1,61 @@
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        int max = 0;
+        
+        for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[i].length; j++){
+                if( matrix[i][j]  == '0') continue;
+                else if ( i - 1 < 0 || j - 1 < 0 ) dp[i][j] = 1;
+                else {
+                    int up =  dp[i - 1][j] ;
+                    int back =  dp[i][j - 1]  ;
+                    int northwest =  dp[i-1][j - 1] ;
+                    int min =  Math.min(up, Math.min(back,northwest));
+                    dp[i][j] = min + 1;
+                }
+                max = Math.max(max,dp[i][j]);
+            }
+        }
+        return max * max;
+    }
+}
+
+
+
+
+
+
+
+*********************************************************************************************************************
+
+I learend a number of things about Dynamic programming here, but before that, about question analysys as well.
+
+It is curucial to define things in a problem. The 2 step approach is not just for show.
+
+Step 1 of the 2 step approach is : Define a problem, Break it down, break it down again, until you have an answer.
+
+Definition of the problem is : I need the biggest square of 1s only.
+
+How do I get that?
+
+Intitially, one might think to calculate evry square, well it is important to know how to find a square.
+
+A valid square is if current is 1, the top is 1, the behind is 1, and the northwest is 1. That is what makesa square.
+
+
+Then, to come up with a DP and optimal substructure approach, it is important to realize that sometimes, the recursive 
+nature of the problem could be the thing that points you towards DP.
+
+After defining what a square was, the next problem should have been
+
+"How casn i know if this square can get bigger"
+
+I asked myself this question, but was too lazy to analyze it, So make sure in the future to completely follow 
+through with that thought process.
+
+The answer wa simply, check if the all neighboring elemetns (down,right,south east) are all squares as well.
+This leads to a recursive Kind of thinking, whichj should then have lad to the easier bottom up process.
+
+Also, it is important to realize in top down " What problems am i repeating?" if you are repeating problems, then you
+must cache them, and that is the dead giveaway that something is DP.

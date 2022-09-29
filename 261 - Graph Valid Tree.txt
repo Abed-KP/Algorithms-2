@@ -1,0 +1,192 @@
+class Solution {
+     
+    HashMap<Integer, List<Integer>> map = new HashMap();
+    HashSet<Integer> visited = new HashSet();
+    
+    public boolean validTree(int n, int[][] edges) {
+       
+        if(n == 1) return true;						// Advanced Graph Theory
+        
+        for(int[] edge : edges){
+            if(!map.containsKey(edge[0])) map.put(edge[0],new ArrayList());
+            if(!map.containsKey(edge[1])) map.put(edge[1],new ArrayList());
+            map.get(edge[0]).add(edge[1]);
+            map.get(edge[1]).add(edge[0]);
+        }
+        
+        if(map.size() - edges.length != 1) return false;
+        DFS(0);
+     
+        return visited.size() == n;
+        
+       
+        
+        
+    }
+    public void DFS(int node){        
+        visited.add(node);
+       List<Integer> neighbors = map.get(node);
+        
+        for(int i = 0; i < neighbors.size(); i++){
+            if(visited.contains(neighbors.get(i))) continue;
+            else DFS(neighbors.get(i));
+        }
+    }
+}
+
+
+*************************************************************************************
+
+class Solution {
+     								// Keeping Track of parent
+    HashMap<Integer, List<Integer>> map = new HashMap();
+    HashSet<Integer> visited = new HashSet();
+    boolean cycleExists = false;
+    
+    public boolean validTree(int n, int[][] edges) {
+       
+        if(n == 1) return true;
+        if(edges.length == 0) return false;
+        
+        for(int[] edge : edges){
+            if(!map.containsKey(edge[0])) map.put(edge[0],new ArrayList());
+            if(!map.containsKey(edge[1])) map.put(edge[1],new ArrayList());
+            map.get(edge[0]).add(edge[1]);
+            map.get(edge[1]).add(edge[0]);
+        }
+        
+        
+        DFS(edges[0][0], -1);
+        if(cycleExists) return false;
+        return visited.size() == n;        
+    }
+
+    public void DFS(int node, int prev){        
+        visited.add(node);
+       List<Integer> neighbors = map.get(node);
+        
+        for(int i = 0; i < neighbors.size(); i++){
+            if(visited.contains(neighbors.get(i)) && neighbors.get(i) != prev){
+                cycleExists = true;
+                break;
+            }
+            else if (visited.contains(neighbors.get(i)) && neighbors.get(i) == prev) continue;
+            else DFS(neighbors.get(i), node);
+        }
+    }
+}
+
+
+
+*************************************************************************************************************
+
+class Solution {
+     
+    HashMap<Integer, HashSet<Integer>> map = new HashMap();		// Approach 3 - Deleting Neighbor
+    HashSet<Integer> visited = new HashSet();
+    boolean cycleExists = false;
+
+    
+    public boolean validTree(int n, int[][] edges) {
+       
+        if(n == 1) return true;
+        if(edges.length == 0) return false;
+        
+        for(int[] edge : edges){
+            if(!map.containsKey(edge[0])) map.put(edge[0],new HashSet());
+            if(!map.containsKey(edge[1])) map.put(edge[1],new HashSet());
+            map.get(edge[0]).add(edge[1]);
+            map.get(edge[1]).add(edge[0]);
+        }
+        
+        
+        DFS(edges[0][0]);
+        if(cycleExists) return false;
+        return visited.size() == n;        
+    }
+
+    public void DFS(int node){      
+        
+        visited.add(node);
+        HashSet<Integer> neighbors = map.get(node);
+        
+        for(int neighbor : neighbors){
+            if(visited.contains(neighbor)){
+                cycleExists = true;
+                break;
+            }
+            else {
+                map.get(neighbor).remove(node);
+                DFS(neighbor);
+            }
+        }
+     
+    }
+}
+
+
+***************************************************
+
+
+I Learned some Graph theory concepts, as well as excersized the 2 step approach.
+
+Note: The definition of a valid tree is that it is fully connected, and does not have any cycles. So we have to
+make sure in this question, that the graph is fully connected and has no cycles.
+
+Approach 1:
+
+This approach utlized a graph theory concept that states,
+
+	For a graph to be Acyclic, the number of edges (connections) must equal to the number of node - 1.
+	If it edges were any less, it would mean we do not have a fully connected graph, so for the purpose of
+	this problem, we return false.
+
+	Now, if the edges were greater or equal, then we have a cycle. This is because, if you add an edge, but do
+	not add a Node with it, then this new edge must extend from an existing Node, to a Node already in the
+	structure. This by definition will result in a cycle.
+
+	So the first approach, checks if edges == nodes - 1, and if it does, then we just have to check to see
+	if there is a cycle fore cases like this... 
+	
+5
+[[0,1],[0,4],[1,4],[2,3]]
+
+
+
+CORREEECCCTIONN::::   So the idea  (nodes - edges == 1) Doesn't exactly confirm anything if it is true; There could still be
+			a cycle. It only confirms a negative and we can returna false immedietly in that case. However, if it
+			is true but there is a cycle, that means that the graph is not fully connected. So if we traverse, we
+			wil always not count all nodes.
+			
+
+
+
+
+Approach 2 & 3:
+
+What helped me figure this out was the 2 step approach.
+
+1 - Reiterate the problem out loud, voaclize the sub problems you run into while trying to solve the main problem,
+	and repeat until you reach a sub problem with a solution.
+2 - Break the divergance into all scenarios and attack each one.
+
+
+
+Here the approach was realizing that I simply have to traverse the graph from any node. If i am able to reach
+	every node from that one Node, then the graph is fully connected. Additionaly, I have to make sure there 
+	is so cycle. At first, I wanted to say that I just have to track nodes that I visit, however, in an undirected
+	graph, 1 {2,3} and 2{1} and 3{1} , you can see in this example that if we do that, we will detect the 'caller'
+	Node, and output false. SO we have to make a little adjustment.
+
+We have 2 choices:
+
+After vocalizing my subproblem, which was "I want to trackvisisted nodes, but I also want to ignore the caller Node"
+	I ws able to come up with this solution.
+
+Keep track of the caller node, and if encounter a Node in visited, check if it is the caller Node, if it is, ignore and
+move on, else we know that we ended up somewhere we were before, spo there is a cycle. Imagine a line going downwards
+and you somehow ending back a few steps higher.
+
+The other way, is to simply delete the edge from the child Nodes list right before we call it.
+
+

@@ -1,0 +1,101 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+      
+        if(root == null) return "";
+        StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> que = new LinkedList();
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode node = que.poll();
+            String s = node == null? "null" : Integer.toString(node.val);
+            sb.append(s);
+            sb.append(',');
+            
+            if(node != null){
+            que.add(node.left);
+            que.add(node.right);}
+                                    
+        }    
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data.length() == 0 || data == null) return null;
+        String[] info = data.split(",");
+        Queue<TreeNode> que = new LinkedList();
+        TreeNode root = new TreeNode(Integer.parseInt(info[0]));
+        que.add(root);
+        int pointer = 1;
+        
+        while(!que.isEmpty() && pointer < info.length){
+            TreeNode curr = que.poll();
+            TreeNode leftChild = new TreeNode();
+            TreeNode rightChild = new TreeNode();
+            
+            if(pointer < info.length){
+                leftChild = info[pointer].equals("null")? null: new TreeNode(Integer.parseInt(info[pointer]));
+                curr.left = leftChild;
+                if(leftChild != null) que.add(curr.left);
+                pointer++;
+            }
+            if(pointer < info.length){
+                rightChild = info[pointer].equals("null")? null: new TreeNode(Integer.parseInt(info[pointer]));
+                curr.right = rightChild;
+                if(rightChild != null) que.add(curr.right);
+                pointer++;
+            }
+     }
+        return root;
+    }
+}
+
+**************************************************************************
+
+
+Local Lesson:
+What I learned here is that Queues are a fantatic data structure for working with Binary trees.
+
+Global Lesson:
+Again the two Step approach is Key here.
+
+1 - Define the problem, Break the problem down, ask yourself when something wil not work 'Why will this not work?'
+	Then, find an answer to that question, and do that again and again until everything works.
+
+2 - Break the problem down into ceach individual case in can diverge too.
+
+
+This problem was 2 parts:
+
+Serialization:
+
+Essentially, we had to create as string that represents a Bianry tree given the root.
+
+We can do that by using a Queue nad level order traversal, and  StringBuilder.
+
+We print each node as a string, then add its left and right child to the queue.
+
+
+De-Serializing:
+
+Here We use a string array, and a queue as well.
+
+We add the root to the que.
+
+We set the left and right childs by finding them in the array using a pointer.
+
+Next we only add them to the queue if they are not null, this ensures that our pointer keeps working properly.
+We keep doing this until the que is empty.

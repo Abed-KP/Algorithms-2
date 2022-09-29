@@ -1,0 +1,121 @@
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+    
+        PriorityQueue<Node> que = new PriorityQueue<>((a,b) -> (a.val - b.val));
+        ListNode dummyHead = new ListNode(-1);
+        ListNode tail = dummyHead;
+        
+        for(int i = 0; i < lists.length; i++){
+            ListNode current = lists[i];
+            if(current != null){
+                lists[i] = current.next;
+                current.next = null;
+                que.add(new Node(current.val,i,current));
+            }
+        }
+      
+        while(!que.isEmpty()){
+            Node temp = que.poll();
+            tail.next = temp.node;
+            tail = tail.next;
+            int takenIndex = temp.index;
+            
+            if(lists[takenIndex] != null){
+                ListNode current = lists[takenIndex];
+                lists[takenIndex] = current.next;
+                current.next = null;
+                que.add(new Node(current.val,takenIndex,current));                
+            }
+        }
+        
+        return dummyHead.next;               
+    }   
+    
+    class Node{
+        int val;
+        int index;
+        ListNode node;
+
+        Node(int val, int index, ListNode node){
+            this.val = val;
+            this.index = index;
+            this.node = node;
+        }
+    }
+}
+******************************************************************************************
+class Solution {
+    
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0) return null;
+        
+        Queue<ListNode> que = new LinkedList();
+        for(ListNode list: lists){
+            if(list != null) que.add(list);
+        }
+        
+        while(que.size() > 1){
+            ListNode l1 = que.poll();
+            ListNode l2 = que.poll();
+            que.add(mergeTwoLists(l1,l2));
+        }
+       
+        return que.size() > 0? que.peek(): null;
+    }
+    
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2){
+      
+        
+        ListNode dummy = new ListNode(-1);
+        ListNode current = dummy;
+        
+        while(l1 != null && l2 != null){
+            if(l1.val <= l2.val){
+                current.next = l1;
+                l1 = l1.next;
+            }
+            else{
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        
+        while(l1 != null){
+            current.next = l1;
+            l1 = l1.next;
+            current = current.next;
+        }
+        
+        while(l2 != null){
+            current.next = l2;
+            l2 = l2.next;
+            current = current.next;
+        }
+        
+        return dummy.next;
+    }
+}
+
+***************************************************************************************************
+
+
+
+There are 2 solutions here.
+
+1 - Priortiy Queue - Time: N log(k) , Space: O(k)
+
+The solution here is to create an object that contains the ListNodes, and the index that they came from.
+We push K elements into the priortiyQueue. Then everytime we pop a Node off, we use the pointer to the index it came from
+to pop it back on. Each index will eventually run out and stop giving nodes, and once all run out, the queue
+will eventually be empty and we will have a sorted ListNode
+
+2 - Merge 2 lists together: Time: O(N) , Space O(K)
+
+Here, we sort the ListNodes 2 by 2. We use a regular Queue and push all the nodes on then we pop 2, merge them, and add it to the
+queue, eventually, once each pair is sorted, we will reach that first one again, and we will merge it with another list,
+and so on, eventually, we will be left with 1 fully sorted Nodes.
+
+
+I was able to reach the PQ solution by breaking the question down, and breaking the problem down to smaller pieces,
+until i reached a trivial problem which was "how do i keep track of the next node to push," and the asnwer for that was an object.

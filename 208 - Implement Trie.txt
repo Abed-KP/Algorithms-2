@@ -1,0 +1,82 @@
+class Trie {
+	
+    Node node;
+    
+	public Trie() {
+		node = new Node();
+	}
+
+
+	public void insert(String word) {
+		Node curr = node;
+		for (int i = 0; i<word.length(); i++) {
+			char c = word.charAt(i);
+			if (curr.children[c - 'a'] == null) curr.children[c - 'a'] = new Node();
+			curr = curr.children[c - 'a'];
+		}
+		curr.isword = true;
+	}
+
+	
+	public boolean search(String word) {
+		Node curr = node;
+		for (int i = 0; i<word.length(); i++) {
+			char c = word.charAt(i);
+			if (curr.children[c - 'a'] == null) return false;
+			curr = curr.children[c - 'a'];
+		}
+		return curr.isword;
+
+	}
+
+	public boolean startsWith(String prefix) {
+		Node curr = node;
+		for (int i = 0; i<prefix.length(); i++) {
+			char c = prefix.charAt(i);
+			if (curr.children[c - 'a'] == null) return false;
+			curr = curr.children[c - 'a'];
+		}
+		return true;
+	}
+
+	class Node {
+		boolean isword;
+		Node[] children;
+
+		Node() {
+
+			this.isword = false;
+			children = new Node[26];
+		}
+	}
+}
+
+*************************************************************************************
+
+
+I learned about the Trie Data Structure.
+
+Trie is a data structure that represents a tree where the nodes contain 2 things.
+
+1 - Another Node Array[26]
+2 - a boolean value indicating whether this node representsd the end of a word we had inserted.
+
+For the word "cat"
+
+We create a dummy node, and then insert a new node into the 3rd position of the dummy nodes array.
+Then we move to that Node.
+Now in the new node, we insert a new node in the 1st positon for 'a';
+Next, we move to that new node as well.
+Then we insert 't' , and cisit that new Node.
+
+Finally we set the boolean value to true at this current node.
+
+The boolean value is to differentiate between "cat" and "caterpillar" for example.
+
+If we had added "caterpillar", then only "caterpillar" had been added, that only reason 'cat' is in there
+is because it is contained in "caterpillar."
+
+Tries involves simply traversing the node and seeing if you can reach certain nodes that represent a word created 
+by the path traversed. 
+
+

@@ -1,0 +1,91 @@
+class Solution {
+    public int search(int[] nums, int target) {
+        
+        int left = 0;
+        int right = nums.length - 1;
+            
+        while ( left < right){
+            
+            int mid = (right + left) / 2;
+            
+            if (nums[mid] > nums[right]){
+                left = mid + 1; 
+            }
+            else if (nums[mid] < nums[right]){
+                
+                right = mid;
+            }
+            
+            
+        }
+        
+        
+      int pivotIndex = left; 
+        
+        if (target <= nums[nums.length - 1]){
+            
+          return  binarySearch(nums,pivotIndex, nums.length, target);
+        }
+        else {
+            
+           return  binarySearch(nums,0,pivotIndex,target);
+        }
+        
+        
+    }
+    
+    
+    
+    
+    public int binarySearch(int[] nums, int left, int right, int target){
+
+        
+        
+      while (left < right){
+          
+          
+         int mid = (left + right) / 2;
+             
+             if (nums[mid] == target)  {
+                 
+               return  mid;
+             }
+          else if (nums[mid] < target) {
+              
+              left = mid  + 1;
+          }
+             
+          else {
+              
+              right = mid;
+          }
+          
+          
+      }
+        
+        return -1;
+        
+        
+        
+        
+    }
+}
+***************************************************************************************************************************
+
+
+
+This Question combines "Find minimum in rotated array" which is the first part, and a tiny bit more. 
+
+To find the minimum, I learned that it is important to not only consider adjacent elements, but edge elements as well.
+
+For example, I was trying to compare elements next to each other to find the minimum, but comparing the elements at the
+
+"right" of the array proved to be so much more usefsul and worked.
+
+I learned that all you have to do is adjust one side or another when attempting a binary search to see fi it works.
+
+Also, I learned to consider edge cases and see if my solution is asl encompassing, for instance, when I was choosing 
+the boundaries to do the regular binary search, I did it right, but I was lucky that a fully sorted array case worked,
+
+just a note to remember to mentally test such edge case in your head.
+

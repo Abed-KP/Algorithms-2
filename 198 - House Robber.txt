@@ -1,0 +1,36 @@
+class Solution {
+    public int rob(int[] nums) {
+        int[] dp = new int[nums.length + 2];
+        
+        for(int i = 0; i < nums.length; i++){
+            dp[i+2] = Math.max(dp[i] + nums[i],dp[i+1]);
+        }
+        return dp[dp.length - 1];
+    }
+}
+
+*****************************************************************
+
+This is a dynamic programming question, the way I could tell is because it is asking for the "maximum" of something.
+
+[2,7,9,3,1]
+
+If I ask myself this question.
+
+What is the maximum I could get without robbing 2 adjacent houses.
+
+Well, I can take the , and say that the asnwer to this question,
+
+is the answer to [2,7,9] + 1, because I cannot use adjacent houses. Unless the 3 will result in a better outcome.
+
+If I have to use the 3, then the answer to this is the answer to
+[2,7,9,3].
+
+The answers is Math.max([2,7,9] + 1, [2,7,9,3])
+
+In, [2,7,9,3], I may be not using the '3', but [2,7,9,3] is only greater than [2,7,9], if I am using the 3. Otherwise, [2,7,9]
+must have used something that is better than using the '3', and therfore I can add + 1 to it.
+
+I solved this because I noticed it was a dynamic programming question, and asked myself the same question, for a smaller case.
+until I reached the base case.
+

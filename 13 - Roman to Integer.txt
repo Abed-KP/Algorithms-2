@@ -1,0 +1,39 @@
+class Solution {
+    public int romanToInt(String s) {
+
+      HashMap<Character,Integer> map = new HashMap();
+         map.put('I',1);
+         map.put('V',5);
+         map.put('X',10);
+         map.put('L',50);
+         map.put('C',100);
+         map.put('D',500);
+         map.put('M',1000);
+
+          int res = 0;
+          int n = s.length();
+          for (int i = 0; i < n; i++){
+
+              if (i+1 < n){
+
+                  if (map.get(s.charAt(i)) >= map.get(s.charAt(i + 1)) ){
+                      res += map.get(s.charAt(i));
+                  }
+                  else {
+                      res += map.get(s.charAt(i+1)) - map.get(s.charAt(i));
+                      i++;
+                  }
+              }
+              else {
+                  res += map.get(s.charAt(i));
+              }
+
+          }
+                return res;
+
+            }
+        }
+
+ ****************************************************************************************     
+        /* I learned to control "Next flow" with double skips to avoid
+        re-processing, as well as checkers when we are in the last index to avoid out of bounds. */

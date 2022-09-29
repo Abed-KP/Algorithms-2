@@ -1,0 +1,108 @@
+class WordDictionary {
+    Node root;
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+        root = new Node();
+    }
+
+    public void addWord(String word) {
+        Node curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (curr.children[c - 'a'] == null) curr.children[c - 'a'] = new Node();
+            curr = curr.children[c - 'a'];
+        }
+        curr.isword = true;
+    }
+
+    public boolean search(String word) {
+        Node curr = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (c == '.') return searchAll(curr, word, i + 1);
+            else if (curr.children[c - 'a'] != null) curr = curr.children[c - 'a'];
+            else return false;
+        }
+        return curr.isword == true;
+    }
+
+    public boolean searchAll(Node original, String word, int index) {
+        Node origin = original;
+
+        for (int p = 0; p < 26; p++) {
+            if (origin.children[p] == null) continue;
+            Node curr = origin.children[p];
+            int i = index;
+            for (i = i; i < word.length(); i++) {
+                char c = word.charAt(i);
+                if (c == '.') {
+                    if (searchAll(curr, word, i + 1) == true) return true;
+                    else break;
+                } else if (curr.children[c - 'a'] != null) curr = curr.children[c - 'a'];
+                else break;
+            }
+            if (i == word.length() && curr.isword) return true;
+        }
+        return false;
+
+    }
+
+    class Node {
+        boolean isword;
+        Node[] children;
+        Node() {
+            this.isword = false;
+            children = new Node[26];
+        }
+    }
+}
+
+**********************************************************************************************
+
+
+What worked here was combining my Knowledge of Tries and the 2 step double approach.
+
+* refer to 'Implement Trie* Question for explanation on Tries.
+
+The two step approach involved
+
+1 - Defining the problem, breaking it down, defining those problems, until I had a solution.
+
+2 - Breaking down the problem into cases.
+
+
+Here, when searching we have 1 of 3 options
+
+Case 1: Node[i] is null : in this case, we return false because the word has not been inserted.
+Case 2: Node[i] exists: We move to the node in Node[i];
+Case 3: We see a '.'
+
+This is what defining the sub problems is:
+
+A '.' means thatwe can use any character and go down that path. Additonally, we have to go down all paths, because
+even though a certain path may fail, maybe using another character for '.' could have worked out. Therefore, we must
+visit all pasths.
+
+So we call a method.
+
+
+This new method's goal is to traverse every path, and see if there is a match.
+
+So
+
+- Check if path[i] is valid, if it is, then take that path, if not, move to the next path.
+
+Then, we have 3 cases once we take a path.
+
+Case 1: Node[i] is null : in this case, we break from the current path, and try the next path.
+Case 2: Node[i] exists: We move to the node in Node[i];
+Case 3:
+
+ We see a '.', we go into a recursion and start taking all paths along this chosen path.
+
+If a path concluded, then we return true, else we try the next path. If we run out of paths, we return false.
+
+Note: in code, you have to make sure that the path concluded by trying the last letter in the word and reaching a
+valid word, and make sure that you are not just checking if where you "break" coincidentally leaves you off at
+a word.
+

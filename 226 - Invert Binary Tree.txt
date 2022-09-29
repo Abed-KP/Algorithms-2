@@ -1,0 +1,17 @@
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null) return null;
+              
+        TreeNode temp = root.right;
+        root.right = invertTree(root.left);
+        root.left = invertTree(temp);
+        return root;
+    }
+}
+
+**********************************
+
+Always recognize when you reach a state where you break down the problem into all cases thawt it may diverge too.
+
+Also, I learned that the key to recursion is realizing that it is the same thing hapening everytime, but you have to make
+sure that your base case will result in the proper answers bubbling up. 

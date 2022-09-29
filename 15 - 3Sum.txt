@@ -1,0 +1,56 @@
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        HashMap<Integer,Integer> map = new HashMap();
+        HashSet<List<Integer>> valids = new HashSet();
+        List<List<Integer>> res = new ArrayList();
+        
+        for(int i = 0; i < nums.length; i++) map.put(nums[i],map.getOrDefault(nums[i], 0) + 1);
+        
+        for(int i = 0; i < nums.length; i++){
+            for(int j = i + 1; j < nums.length; j++){
+                int complement = 0 - (nums[i] + nums[j]);
+                if(map.containsKey(complement)){
+                    int taken = 0;
+                    if(nums[i] == complement && nums[j] == complement) taken += 2;
+                    else if (nums[i] == complement|| nums[j] == complement) taken++;
+                    
+                    if(map.get(complement) - taken > 0){
+                        List<Integer> list = new ArrayList();
+                        list.add(nums[i]);
+                        list.add(nums[j]);
+                        list.add(complement);
+                        Collections.sort(list);
+                        valids.add(list);                        
+                    }
+                }
+            }
+        }
+        
+      res.addAll(valids);
+        return res;
+    }
+}
+************************************************************
+
+
+The key that worked here is this breaking down the problem into smaller pieces, and identifying what I need by asking
+a question when I can't figure out something.
+
+In this case the smaller pieces were
+
+1 - I need to try all 3 combinations. Thus we can compare every two elements, and use a Hashmap to lookup if a 
+the third value we need to make a sum of 0 exists.
+2 - If we do this, a problem comes up. What if we get 2,-1,-1. We might only have 1 '-1', therefore, we have to map
+the numbers in our Hashmap to their frequencies, and see if our current triplet uses more of an integer than what we have.
+3 - We have to Also make sure that we don't add duplicate lists. We can do this by sorting each triplet and placing it
+in a HashSet. 
+
+In the end, all our lists will be in the Hashset.
+
+This is what I mean by breaking down the problem. You can easily get a solution when you tackle each issue that arises,
+by asking the questions "what do I need to do here." Instead of trying to come up with something.
+
+It is key to list out all your problems, and all the edge cases that will cause issues, and then proceed from there with
+devising a solution. 
+
+

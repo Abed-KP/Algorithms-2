@@ -1,0 +1,62 @@
+class Solution {
+    public boolean isPalindrome(int x) {
+          
+        if (x < 0 || (x % 10 == 0 && x != 0)){
+            return false;
+        }      
+       
+        int reverseBuild = 0;
+        int temp = x;
+        while (temp != 0){ 
+            reverseBuild = reverseBuild * 10 + temp % 10;
+            temp /= 10;
+        }
+        
+        return reverseBuild == x;
+        
+    }
+}
+
+****************************************************************
+class Solution {
+    public boolean isPalindrome(int x) {
+          
+        if (x < 0){
+            return false;
+        }      
+        String s = String.valueOf(x);
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j){
+            if (s.charAt(i) != s.charAt(j)) return false;
+            i++;
+            j--;
+        }
+        return true;                
+    }
+}
+
+
+*********************************************************************************
+class Solution {
+    public boolean isPalindrome(int x) {
+          
+        if (x < 0){
+            return false;
+        }     
+        StringBuilder res = new StringBuilder(String.valueOf(x));
+        String s = res.toString();
+        String y = res.reverse().toString();      
+       if ( s.equals(y))   return true;       
+            return false;                   
+    }
+}
+**************************************************************
+
+
+Plaindrome solution always include converting to string, and then using StringBuilder to reverse and compare, or
+
+while loop with two pointers. In the case of integers we can rebuiled the Integer using the formula 
+
+newInt = newInt * 10 + oldInt % 10.
+Then divide oldInt by 10 and make sure to keep temp variable to compare in the end.

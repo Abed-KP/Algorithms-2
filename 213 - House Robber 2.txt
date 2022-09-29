@@ -1,0 +1,35 @@
+class Solution {
+    public int rob(int[] nums) {
+        if(nums.length ==  1) return nums[0];
+        
+        int n = nums.length + 1;
+        int[] dpFromFront = new int[n];
+            
+        for(int i = 0; i < nums.length - 1; i++){
+            dpFromFront[i+2] = Math.max(dpFromFront[i]  + nums[i],dpFromFront[i+1]);
+        }
+        
+        int[] dpFromBack = new int[n];
+        
+        for(int i = nums.length - 1, j = 2; i >= 1; i--,j++){
+            dpFromBack[j] = Math.max(dpFromBack[j-2]  + nums[i], dpFromBack[j-1]);
+        }
+        
+        return Math.max(dpFromFront[n-1],dpFromBack[n-1]);
+        
+    }
+}
+
+**************************************************
+
+See "House robber 1" for explnation.
+
+This question is solved with the same logic as house robber 1, however, when we get to the last element, we have 3 choices.
+
+either we take dp[i-2] + i, or dp[i-1]. Howveer, if we take dp[i-2],we have to make sure to not take the first element.
+
+Well, if we dont take the first element, then we can just solve house robber for nums starting from nums[1].
+
+If we take, dp[i-1], and we do not use the lst element, then that is the same as solving for nums, excluding the last element.
+
+So we solve for both of those, and see which is greater.

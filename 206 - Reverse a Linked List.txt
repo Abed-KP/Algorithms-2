@@ -1,0 +1,50 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+###################################
+
+Iteritive-uh Solution;
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode temp = null;
+        
+        while (curr != null){
+            temp = curr.next;					I learned that when workining with LinkedList, it is key
+            curr.next = prev;					to realize that you are not creating copies of nodes, but
+            prev = curr;					only giving yourself more "remote controls" to the same
+            curr = temp;					node. Also, moving node by node, and covering ever pointing									
+        }							will solve the problem
+        return prev;
+        
+    }
+}
+
+
+##########################################################
+
+Recursive Soltuion;
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        
+    if (head == null || head.next == null) {
+        return head;
+    }
+        ListNode x = reverseList(head.next);
+            head.next.next = head;
+            head.next = null;
+            return x;
+    }   
+}

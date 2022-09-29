@@ -1,0 +1,173 @@
+class Solution {
+    public int minDistance(String word1, String word2) {
+       
+        int m = word1.length();
+        int n = word2.length();
+        
+        int[][] dp = new int[m+1][n+1];
+        for(int i = 0; i < dp.length; i++) dp[i][0] = i;
+        for(int i = 0; i < dp[0].length; i++) dp[0][i] = i;
+        
+        for(int i = 1; i < dp.length; i++){
+            for(int j = 1; j < dp[i].length; j++){
+                
+                if(word1.charAt(i-1) == word2.charAt(j-1)) {
+                    dp[i][j] = dp[i-1][j-1];
+                }
+                else{
+                    int up = dp[i-1][j];
+                    int left = dp[i][j-1];
+                    int diag = dp[i-1][j-1];
+                    dp[i][j] = 1 + Math.min(up,Math.min(left,diag));
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
+
+
+
+
+
+*************************************************************************************************
+
+The Logic Behind the problem:
+
+In this question, we model the dynamic programming as a matrix table in which we look up the answersd to the subproblems.
+
+We first have to establish a simple idee away from the code.
+
+In order to find the Edit Distance between some string of length 'n' and the Empty String. That takes 'n' operations.
+That is the most basic case.
+
+- To convert 'a' to '', we need 1 operations.
+- To convert 'ab' to '', we need 2 operations
+- To convert 'abc' to '', we need 3 operations.
+
+and so on.
+
+Then we build our solution off of those base cases.
+Next, Let us look at how words transform into other words.
+
+If we take 'horse' and 'ros' for Example.
+
+		horse
+  		  ros
+
+At this point, There are 4 possible scenarios.
+
+1 - Characters currently being comparaed Match.
+2 - No Match - Insert
+3 - No Match - Delete
+4 - No Match - Replace
+
+For Case 1:
+
+It is important to understand that if we have the word 'abc' and 'xxc' then this statement applies.
+
+The Edit distance of 'abc' and 'xxc' is equivilant to the edit distance of 'ab' and 'xx'.
+
+If the characters do NOT match, then we have 1 of 3 Choices. Insert, Delete, or Replace.
+
+For Case 2:
+
+
+If we insert, we see that ros (our goal word) ends with s. so we can 'insert' an 's' at the end of 'horse'.
+This results in us having a match at the final characters. However, that costs me 1 operation.
+
+So now theoritically, the words look like this.
+
+'horse s'
+'ros'
+
+So we know with that the follow statement applied for the new strings 'horses' and 'ros'.
+
+The Edit distance of 'horses' and 'ros' is equivilant to the edit distance of 'horse' and 'ro'.
+BUT, we have to add 1 to the new comparison, because that 's' came from us applying the insert operation.
+
+Inserting a character results in the pointer of our first word remaining where it is, and the pointer in the second
+word decrementing.
+
+So, insert: (i,j-1)
+
+For Case 3:
+
+If we choose to delete, then 'horse' and 'ros' becomes 'hors' and 'ros'.
+
+Deleting cost us 1 operation. We chose to do that, but now it is up to us to make sure 'hors' matches 'ros.'
+
+So deleting costs 1 operation, and then the new question is
+
+What is the edit distance between 'hors' and 'ros' - But we add 1 to the answer to that because we deleted a character.
+
+So, delete: (i-1,j)
+
+For Case 4:
+
+If we choose to replace. Then in our example 'horse' and 'ros' , We can replace the 'e' with 's', and that costs 1 operation.
+
+Therefore, we know that the answer to the minimum edit distances of 'horse' and 'ros' is the minimum edit distance
+of 'hors' and 'ro' + 1, because replacing cost us 1 operation
+
+So, replace is (i-1,j-1)
+
+Now, we solve thew simplest problems.
+    
+ "" r o s
+h 0 1 2 3
+o 1
+r 2
+s 3
+e 4
+
+So, we have solved the easiest problems here, which involves the edit distance of any string of 
+length 'n' to the empty string.
+
+so 'h' to empty string is 1
+   'ho' to empty string is 2
+   and so on.
+
+Our first 'second level most trivial sub-problem' is converting 'h' to 'r', this question lies in cell [1,1]
+
+We have 3 choices.
+
+Case 1: If we Insert, then we 'insert' and 'r' to h, and then thew answer becomes the edit distance between 'h' and "" + 1,
+because it took 1 operation to insert an 'r' and match it. We can look in cell [1,0] to find the answer for 'h' and "".
+
+Case2: If we delete, then we 'delete' the 'h' and then the answer becomes the edit distance between "" and 'r' + 1,
+because it took 1 operation to delete the 'h'. We can look in cell [0,1] to find the asnwer for "" and 'r'
+
+Case3: If we replace, then we 'replace' the 'h' with an 'r', and our new question is the edit distance between "" & "" + 1
+because it took 1 operation to 'replace' and end up up with the subproblem "" & "". The answer to "" & "" is in cell [0,0]
+
+Finally, we take the minimum of if we replaced, inserted, and deleted, because we are looking for minimum edit distance.
+
+Now, to demonstrate how these build on top of each other, let us solve the the question in cell [1,2] which asks
+for the edit distance between 'h' and 'ro'.
+
+If we choose to insert an 'o', then the answer is the minimum edit distance of 'h' and 'r' + 1, because it took 1
+operartion to insert.
+
+What is the minimun edit distance for 'h' and 'r'? We just solved that earlier! - Dynamic Programming at work here.
+
+
+What I learned:
+
+
+I learned to take cases and divergences 1 step ast a time.
+
+When I first saw that we could insert, delete, or replace. I was thinking " Well, If I insert, then maybe a delete 
+is better later, and if replace, maybe insert might have been the better oepration."
+
+Instead, I should have realized that 1 thing will happen at a time. Either insert, delete, or replace.
+
+After getting an answer for each one of those, then the same question applied again to the result of each one of those
+questions. THAT RECURSIVE QUALITY should have dinged the Dynamic Programming inmy brain.
+
+Next thing In leared is to try to find the sub problems. Think about the Most trivial case, which in this case,
+is the edit distances between any word and the empty string.
+
+Also, Think about how you can model your answer as something like this.
+
+The answer to 10 + 1, is the answer to 9 + 2.... Find the answer to 9. 

@@ -1,0 +1,32 @@
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int max = 1;
+        Arrays.sort(intervals, new Comparator<int[]>(){
+            public int compare(int[] entry1, int[] entry2){
+                return entry1[0] - entry2[0];
+            }
+        });
+       PriorityQueue<Integer> que = new PriorityQueue();
+       que.add(intervals[0][1]);
+       for(int i = 1; i < intervals.length; i++){
+           while(!que.isEmpty() && intervals[i][0] >= que.peek()){
+               que.poll();
+           }
+               que.add(intervals[i][1]);
+               max = Math.max(max, que.size());           
+       }
+        return max;
+    }
+}
+
+***************************
+
+I used the power of a comparator class. In addition, I also was reminded of the importance of solving a question in 
+
+English when approaching it first. Also, was reminding that "if" cases happen subsequent to each other, so i can always
+
+put the more crucial one first to avoid a null pointer exception. 
+
+Sort the array by start times, then start "starting" new meeting, and then using a priorityQue, it keepsthe closest
+
+ending meeting on top, so you just pop off all the ones that ended before adding a new one.

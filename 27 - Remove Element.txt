@@ -1,0 +1,19 @@
+class Solution {
+    public int removeElement(int[] nums, int val) {
+    
+      						  I learned the "always pointing to something" approach. Here i is
+        int i = 0;				  always pointing to an indes
+        for (int j = 0; j < nums.length; j++){
+            if (nums[j] != val){
+                nums[i] = nums[j];
+                i++;
+            }
+            
+        }
+    return i;
+    }
+    
+    
+    
+   
+}

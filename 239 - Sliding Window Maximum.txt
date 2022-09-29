@@ -1,0 +1,53 @@
+class Solution {
+    ArrayDeque<Integer> deq = new ArrayDeque();
+    int[] nums;
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        this.nums = nums;
+        if(nums.length * k == 0) return new int[0];
+        if(k == 1) return nums;
+        List<Integer> maxes = new LinkedList();
+                
+        for(int i = 0; i < k; i++){
+            adjustDeque(i, k);
+        }
+            maxes.add(nums[deq.getFirst()]);
+
+        for(int i = k; i  < nums.length; i++){
+            adjustDeque(i,k);
+             maxes.add(nums[deq.getFirst()]);
+        }
+        
+        int[] res = new int[maxes.size()];
+        int index = 0;
+        while(maxes.size() != 0) res[index++] = maxes.remove(0);
+        return res;
+        
+       
+    }
+    
+    public void adjustDeque(int index_of_newest, int k){
+        if(!deq.isEmpty() && index_of_newest - deq.getFirst() + 1 > k ) deq.removeFirst();    
+        while(!deq.isEmpty() && nums[deq.getLast()] < nums[index_of_newest]) deq.removeLast();
+        deq.addLast(index_of_newest);
+    }
+}
+
+
+*************************************************************
+
+Local lesson:
+
+In this question, I learned about the ArrayDeque Data Structure. It can be used as a Queue or a Stack, and has O(1)
+from top and bottom.
+
+Global lesson:
+
+My takeway regarding how to think of this solution on my own is this key idea.
+
+Whenever we are adding a new thing, and removing old things, in a manner where olds get popped and news get added.
+
+if the new data has the property of being "ultimate" as in " Greater than all the others if that is what we are looking
+for, or "Less than all the others" if that is what we are looking for, then non of the other data matters. 
+
+This is because, that new data will maintain its property unless a new data comes in. We can throw away all the old
+data because they will all be popped or "thrown away" without affecting the fact that this new data is the ultimate.

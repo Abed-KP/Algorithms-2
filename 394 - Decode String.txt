@@ -1,0 +1,113 @@
+class Solution {
+    public String decodeString(String s) {							// Iterative with StringBuilder
+        StringBuilder curr = new StringBuilder();
+        Stack < StringBuilder > stack = new Stack();
+        Stack < Integer > numbers = new Stack();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                i = buildNumber(numbers, s, i);
+                stack.push(curr);
+                curr = new StringBuilder();
+            } else if (Character.isAlphabetic(c)) curr.append(c);
+
+            else {
+                int count = numbers.pop();
+                String copy = curr.toString();
+                while (count > 1) {
+                    curr.append(copy);
+                    count--;
+                }
+                stack.peek().append(curr);
+                curr = stack.pop();
+            }
+
+        }
+        return curr.toString();
+    }
+    public int buildNumber(Stack < Integer > numbers, String s, int i) {
+        int res = 0;
+        while (Character.isDigit(s.charAt(i))) {
+            res = res * 10 + (s.charAt(i) - '0');
+            i++;
+        }
+        numbers.push(res);
+        return i;
+    }
+
+
+}
+// We see number -> Push new StringBuilder
+// We see ']' -> append curr to previous StringBuilder, curr becomes prev
+// We see letter -> append to curr
+
+****************************************************************************************************
+class Solution {									// Recursion
+    int index = 0;
+    public String decodeString(String s) {
+        StringBuilder res = new StringBuilder();
+
+        while (index < s.length()) {
+            char c = s.charAt(index);
+            if (Character.isAlphabetic(c)) {
+                res.append(c);
+                index++;
+            } else if (Character.isDigit(c)) {
+                int copytimes = 0;
+                while (Character.isDigit(s.charAt(index))) {
+                    copytimes = copytimes * 10 + (s.charAt(index) - '0');
+                    index++;
+                }
+                index++;
+                String nextPiece = decodeString(s);
+                while (copytimes > 0) {
+                    res.append(nextPiece);
+                    copytimes--;
+                }
+            } else {
+                index++;
+                return res.toString();
+            }
+        }
+        return res.toString();
+    }
+}
+
+// We see number -> Do rescursion, start fresh.
+// We see ']' -> return the string from this recursion as an append to the previous recursion.
+// We see letter -> append to current StringBuilder
+
+
+
+*************************************************************************************************
+
+
+
+I learned a number of things in this problem. Again, the 2 stage solving process is proving to be the way to succeed in Leetcode.
+
+1 - Define the problem, ask yourself what you are trying to do and break it down step by step.
+2 - Once you are able, break the problem into every Case that it can diverge too.
+
+Additonally, I learned 2 things regarding Stacks here.
+1 - Whenever we have a bracket type question, it is a good idea to consider stacks.
+2 - Recursion can be modeled using a stack many times. This is because recursion itself is a stack-based approach.
+
+Solution 1: Using a Stack of Stringbuilders.
+The goal is that we can see 3 different cases.
+ 1- We see a number -> in that case, we have to start building something new as it will alone be duplicated a specific amount of times acording to the number.
+	So we start a new Stringbuilder, and push the current one onto the stack. When we are done with the current one, we duplicate it and append it to the the
+	stringbuilder on top of stack, and Stringbuilder on top of the stack becomes the current one.
+2 - We see a letter -> Append to curr stringbuilder.
+3 - We see a ']' close -> That means we are done with the current StringBuilder, so we duplicate and Append to the StringBulder on top of the stack.
+
+
+
+
+Solution 2: Using Recursion.
+
+Here, whenever we see a number, it means we are solving the same problem again.
+  1 - We see a number -> save number, decode the next string.
+  2 - We see a letter -> append to current recursion's stringbuilder.
+  3 - We see a close -> we return the current stringbuilder to the previous one, and the previous recursion wil duplicate current
+      this string because it had previously saved the duplicate, and then append it to its own stringbuilder.

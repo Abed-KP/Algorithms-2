@@ -1,0 +1,67 @@
+class Solution {
+    public int coinChange(int[] coins, int amount) {			// Bottom-Up Dynamic Programming.
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, 1, dp.length, amount + 1);
+        for(int i = 1; i <= amount; i++){
+            for(int j = 0; j < coins.length; j++){
+                if(i - coins[j] < 0) continue;
+                dp[i] = Math.min(dp[i],dp[i - coins[j]] + 1);
+            }
+        }
+        return dp[dp.length - 1] > amount? -1: dp[dp.length - 1];
+    }
+}
+****************************************************************************************************************************
+In both Approaches, the main idea behind Dynamic programming has been clarified. I have to find the exact way, that
+"Current" is a result of something that proceeded it. There is always a question or a statement that achieves exactly
+that. In the Bottom up approach, we know that "The best way to make change for amount, is the best way to make change
+for amount - coins[i] + 1. In other words, if we are using coin[i] to complete the change, then we just have to find 
+the best way to make change for amount - coins[i], then add 1 because we are using the newcoin.
+
+the Top down recursive approach is a little tricker, but here we go. The two things in Top down, is knowing how to 
+write the recursion, and how to memoize. Writing the recursion can be done like this. You have to figure out all the 
+different cases that could happen. In this case the case are as follow.
+
+Case 1: We hit 0, change compelete:
+Case 2: Or we hit a new number that we have not seen.
+Case 3: Or we hit a new number that we have seen.
+
+When we hit 0, we know that we made the change compelte, so we have to figure out what is the most recent amount, 
+and buuble up an incremental answer to the question "best amount of change for this anmount, and save it, as in
+memoize it. Next we might encounter a new mount, if we do, we simply keep it going in the recursive function to find out
+how much change works for it.
+
+Finally, we might encounter an amount we have seen. At that point, no need to go down the recursive rabbit hole,
+ because we have already completed every part of recursion for that number, so we just return what that amount points to.
+In this case, it points to the best numbeer of ways we can make change for that amount.
+
+
+
+Finally, It is an amazing idea to list out all your test case. All the ways something could go different, and make sure
+to test a genral test case from each to prove your program works.
+
+
+*******************************************************************************************************************************
+
+class Solution {							// Top-Down Dynamic Programming Approach
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) return 0;
+        int[] map = new int[amount + 1];
+        getans(amount, map, coins, amount + 1);
+        return map[amount] > amount ? -1 : map[amount];
+    }
+
+    public int getans(int amount, int[] map, int[] coins, int orig) {
+        if (amount == 0) return 1;
+        if (map[amount] != 0) {
+            return map[amount] + 1;
+        }
+        int min = orig;
+        for (int i = coins.length - 1; i >= 0; i--) {
+            if (amount - coins[i] >= 0) min = Math.min(min, getans(amount - coins[i], map, coins, orig));
+        }
+        map[amount] = min;
+        return min + 1;
+    }
+}

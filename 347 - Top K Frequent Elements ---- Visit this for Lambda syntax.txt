@@ -1,0 +1,93 @@
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+       
+        if(k == nums.length) return nums;
+        HashMap<Integer,Integer> map = new HashMap();
+        PriorityQueue<Integer> que = new PriorityQueue<>((a,b) -> (map.get(a) - map.get(b)));
+        
+        for(int i = 0; i < nums.length; i++){
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+        }
+        for(int x : map.keySet()){
+            que.add(x);
+            if(que.size() > k) que.poll();
+        }
+        int[] res = new int[k];
+       
+       for(int i = 0; i < res.length; i++){
+            res[i] = que.poll();
+       }             
+    return res;
+    }
+}
+
+************************************************************************************
+I learned alot in this question. For Starters how to use lambdas. The diamonds must be included,
+ and then you pass in the objects (a,b) with -> pointing to how to mainpulate the object to get desired result.
+
+I also learned that we can really use QuickSelect when it comes to anything K. Or a better way to think about it is this.
+If I know the 'kth' largest element in the array. How will that help me?
+
+For PriorityQueue solution. First we get frequencies using the Hashmap, then we create a priority que, and pass 
+the logic that allows it to sort based on the frequency of that integer in the array. Then, we maintain top k largest
+element as we looop through the array, and finally, dump them into the answer array.
+
+Fro quick select, the key is to use the quick select to find the Kth largest element. So if they want the top 4 most
+frequent, then we find the 4th largest Element, with quickselect, and then because of the quickselect algorithm, everything
+till the end of the array wil be also larger. For this to work, we have to create a HashMap for frequencies, and
+then dump the keys into a new array. This is because we don't want to have duplicates in the array.
+*************************************************************************************
+
+class Solution {
+  public int[] topKFrequent(int[] nums, int k) {
+    HashMap < Integer, Integer > map = new HashMap();
+    for (int i = 0; i < nums.length; i++) {
+      map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+    }
+    int[] res = new int[map.size()];
+    int x = 0;
+    for (Map.Entry < Integer, Integer > entry: map.entrySet()) {
+      res[x] = entry.getKey();
+      x++;
+    }
+
+    int start = quickSelect(res, k, 0, res.length - 1, map);
+    return Arrays.copyOfRange(res, start, res.length);
+
+  }
+
+  public int quickSelect(int[] res, int k, int start, int end, HashMap < Integer, Integer > map) {
+    int p = partition(res, start, end, map);
+    while (p != res.length - k) {
+
+      if (p < res.length - k) {
+        p = partition(res, p + 1, end, map);
+      } else {
+        p = partition(res, start, p - 1, map);
+      }
+    }
+    return p;
+  }
+
+  public int partition(int[] res, int start, int end, HashMap < Integer, Integer > map) {
+    int pivot = res[end];
+    int pindex = start;
+    int i = start;
+    while (i < end) {
+      if (map.get(res[i]) < map.get(pivot)) {
+        swap(res, pindex, i);
+        pindex++;
+      }
+      i++;
+    }
+    swap(res, pindex, end);
+    return pindex;
+
+  }
+
+  public void swap(int[] res, int a, int b) {
+    int temp = res[a];
+    res[a] = res[b];
+    res[b] = temp;
+  }
+}

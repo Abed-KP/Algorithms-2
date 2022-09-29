@@ -1,0 +1,78 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        if(head.next == null || head.next.next == null) return;
+        
+        ListNode dummyhead = new ListNode(-1);
+        dummyhead.next  = head;
+        ListNode slow = dummyhead;
+        ListNode fast = dummyhead;
+        
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next;
+            if(fast != null) fast = fast.next;
+        }
+        
+        ListNode middle = slow.next;
+        slow.next = null;
+        
+        ListNode end = reverseList(middle);
+        
+        ListNode firstPointer = head;
+        ListNode lastPointer = end;
+        
+        while(firstPointer != null && lastPointer != null){
+            ListNode nextFirstPointer = firstPointer.next;
+            ListNode nextLastPointer = lastPointer.next;
+            firstPointer.next = lastPointer;
+            lastPointer.next = nextFirstPointer;
+            firstPointer = nextFirstPointer;
+            lastPointer = nextLastPointer;
+        }
+            
+    }
+    public ListNode reverseList(ListNode head){
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        while(curr != null){
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}
+
+
+************************************************
+
+I solved using the 2 step approach.
+
+1 - Break down the problem into smaller problems
+2 - Tackle each case.
+
+I realized that the question is asking for a list that alternates between the first from the begining and the first from the end
+
+This means I could solve it if I have a pointer at the start going down, and another pointer at the end going up.
+
+LinkedLists don't have indexing, but you can split them in half.
+
+Since I will need the fist half and the second half, adn alterante between each while buildingg the new list, that is what 
+we will do.
+
+We can do that by traversing the list with 2 pointers, one moving at double speed. When the faster one reaches the end,
+The first one will be in the middle.
+
+Then we solve the question for the general case, even and odd numbered list, and finally we hit the edge cases (0,1,2) size list.

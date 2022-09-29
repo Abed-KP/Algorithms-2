@@ -1,0 +1,37 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        
+  
+        ListNode sorty = new ListNode(-1);
+        ListNode testy = sorty;
+       
+        while (l1 !=  null && l2 != null){			What I learned: You cannot start copying a linked list
+            						if there is no reference started node. So we use "test.next"
+					       because we have a "-1" at the start that will throw off the exactness
+           if (l1.val <= l2.val){              of the elements. Also, setiing a linked list to another will copy all remaining elements                
+               testy.next = l1;
+               l1 = l1.next;
+           } else {
+               testy.next = l2;
+               l2 = l2.next;               
+           }
+          testy = testy.next;
+        }
+        
+      testy.next = l1 == null? l2: l1;
+        
+    
+      return sorty.next;
+        
+    }
+}
