@@ -1,0 +1,45 @@
+
+class Solution {
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<TreeNode> que = new LinkedList();
+        HashMap<TreeNode,Integer> map = new HashMap();
+        que.add(root);
+        map.put(root,0);
+        int max = 1;
+        
+        while(!que.isEmpty()){
+            int levelSize = que.size();
+            int lowest = 0;
+            int highest = 0;
+            for(int i = 0; i < levelSize; i++){
+                TreeNode curr = que.poll();
+                if(curr.left != null){
+                    map.put(curr.left,map.get(curr) * 2);
+                    que.add(curr.left);
+                }
+                if(curr.right != null){
+                    map.put(curr.right, map.get(curr) * 2 + 1);
+                    que.add(curr.right);
+                }
+                lowest = i > 0? lowest: map.get(curr);
+                highest = map.get(curr);
+            }
+            max = Math.max(max, highest - lowest + 1);
+        }
+        return max;
+    }
+}
+
+*************************************************
+
+The Idea here was to develop an "Indexing" for the Nodes.
+
+The solution was achieved by utlizing the step 1 of the 2 step approach.
+
+Voicing out the problem and askign yourself what needs to be done.
+
+"I need to know what 'index' the nodes are in.  I can get the answer by subtracting the second one from the first one"
+
+That was the question. And the answer was just to map the nodes to their indecies. Took a little experimination,
+but eventually the formula derived was that a Nodes index was the index of its parent * 2 if it is a left child or
+* 2 + 1 if it is a right child.

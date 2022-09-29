@@ -1,0 +1,68 @@
+class Solution {						// 3D Dynamic Programming O(M*N) Time and O(M * N) Space
+    public int longestLine(int[][] mat) {
+     int[][][] dp = new int[mat.length][mat[0].length][4];
+     int max = 0;
+        
+        for(int i = 0; i < mat.length; i++){
+            for(int j = 0; j < mat[i].length; j++){
+                if(mat[i][j] == 1){
+                    dp[i][j][0] = i > 0? dp[i-1][j][0] + 1: 1;
+                    dp[i][j][1] = j > 0? dp[i][j-1][1] + 1: 1;
+                    dp[i][j][2] = (i > 0 && j > 0 )? dp[i-1][j-1][2] + 1: 1;
+                    dp[i][j][3] = (j < mat[i].length - 1 && i > 0)? dp[i-1][j+1][3] + 1: 1 ;               
+                    max = Math.max(max, (Math.max
+                                     (Math.max(dp[i][j][0],dp[i][j][1]), Math.max(dp[i][j][2], dp[i][j][3]))));                             }                  
+            }
+      }
+        return max;
+    }
+}
+
+// Above us -- cannot check above when i == 0
+// To our left cannot  check left when j == 0;
+// North-west  cannot check North-west when i == 0 || when j == 0
+// North-east  cannot check north-east when i == 0 || when j == mat[i].length - 1
+
+
+*********************************************************************************************************
+Once agin, what is proving to be so successfull is these two approaches.
+
+1- Break down the problem smaller and smaller, and come up with a solution for each of those parts.
+2- Lay out all the possible cases you might run into. In this case it was as follows
+	a - Streak can happen from above - Can only check above when i > 0
+	b - Streak can happen from left - Can only check left when j > 0
+	c - Streak can happen from North West - Can only check North West when i > 0 && j > 0
+	d - Streak can happen from North East - Can only check North East when i > 0 && j < mat[0].lenght - 1;
+
+	In addition, in each case, we can either see a 1 or a 0. You have to make check how each of those if statements behave with 1 and with a 0.
+	Also, I learned about the Nested Math.Max.
+	
+	Again, Emphasize 1 & 2 in all Leetcode questions! 
+*********************************************************************************************************
+								// 2D Dynamic Programming O(M*N) Time and O(N) Space
+class Solution {
+    public int longestLine(int[][] mat) {
+        int[][] dp = new int[mat[0].length][4];
+        int max = 0;
+
+        for (int i = 0; i < mat.length; i++) {
+            int columns_previous_inner_loop = 0;
+            for (int j = 0; j < mat[i].length; j++) {
+
+                if (mat[i][j] == 1) {
+                    dp[j][0] = i > 0 ? dp[j][0] + 1 : 1;
+                    dp[j][1] = j > 0 ? dp[j - 1][1] + 1 : 1;
+                    int prev = dp[j][2];
+                    dp[j][2] = (i > 0 && j > 0) ? columns_previous_inner_loop + 1 : 1;
+                    columns_previous_inner_loop = prev;
+                    dp[j][3] = (j < mat[i].length - 1 && i > 0) ? dp[j + 1][3] + 1 : 1;
+                } else {
+                    columns_previous_inner_loop = dp[j][2];
+                    dp[j][0] = dp[j][1] = dp[j][2] = dp[j][3] = 0;
+                }
+                max = Math.max(max, (Math.max(Math.max(dp[j][0], dp[j][1]), Math.max(dp[j][2], dp[j][3]))));
+            }
+        }   
+    return max;
+}
+}

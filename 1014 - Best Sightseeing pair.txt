@@ -1,0 +1,43 @@
+class Solution {
+    public int maxScoreSightseeingPair(int[] values) {
+   
+        int i = 0;
+        int j = 1;
+        int max  = 0;
+        
+        while(j < values.length){
+            int left = values[i];
+            int right = values[j];
+            max = Math.max(max, left + right + (i-j));
+            if((j  - i ) < (left - right)  ) j++;
+            else{
+                i = j;
+                j++;
+            }
+        }
+        return max;
+    }
+}
+
+
+
+***********************************
+What helped me achieve this was the "breaking down the problem and defining what was actually happening.
+
+The thought process was "Okay, I seem to be losing points because of the distance, however, I don't want to sacrafice
+higher values just to close the distance. So it is probably a trade off that I have to calculate.
+The idea here was figuring out that the question was about the give and take between distance and values.
+
+Listen to this carefully. If the distance between nodes right now is less than the difference in values.
+Then your net total is worth more if you keep holding the left value, and move the right value. You will skip
+many values this way. So if this case does not hold, you just throw away the left value, and the new left value becomes
+the right value, and the right value gets incremented.
+
+It is easier to think about it this way , which is "If the distance is less than the difference in the values". 
+
+it is actually "It actually "if the value is less than or equal." This way however seems to work because the balance remains
+and their is a quality of redundancy and "never reaching a higher value for this to hold." It probably
+requires some mathamatical proof, but below are some test cases to test if you want to explore.
+Test the cases 
+
+[4,7,5,2] and [7,6,0] and [7,7,0]  and [7,6,5,4,]]

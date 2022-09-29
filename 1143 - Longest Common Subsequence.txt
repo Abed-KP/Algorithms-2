@@ -1,0 +1,50 @@
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] dp = new int[text1.length() + 1][text2.length() + 1];
+        int max = 0;
+        for(int i = 1; i < dp.length; i++){
+            for(int j = 1; j < dp[i].length; j++){
+                if(text1.charAt(i-1) == text2.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                    max = Math.max(max,dp[i][j]);
+                }
+                else dp[i][j] = Math.max(dp[i-1][j],dp[i][j-1]);         
+            }
+        }
+        return max;
+    }
+}
+
+
+**************************************************
+
+This question is very similar to 'Edit distance."
+
+The way I solved this was the following.
+
+What is the simplest case to this problem?
+
+	Well, its the LIS between 2 empty strings, where the answer is 0.
+	What are the next easiest cases.
+	
+	Well, when one word increases, and the other remains the empty string.
+	Similarly, vice versa.
+
+	So now we have something that looks like this.
+	   "" a c e	
+	"" 0  0 0 0
+	a  0  
+	b  0
+	c  0
+	d  0
+	e  0
+
+	Next, I start building the answer slowly. I can the 1 letter vs 1 letter case, if they are equal, then that means the LIS
+	has increased by 1. If not, I take the max LIS of the word above me, or the word to the left of me. This is because my 
+	current word, contains the word above me, and the word to the left of me, so any previousoly calculated LIS, still apply.
+
+
+The strategy in solving this question was again the 2 step strategy.
+
+1 - Break the problem down to smaller and easier parts (simplest cases in this question).
+2 - Figure out the all cases (in this case, only 2 cases, current letter, equal to or not).

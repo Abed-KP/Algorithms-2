@@ -1,0 +1,41 @@
+class Solution {
+    public int change(int amount, int[] coins) {        
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+       for(int i = 0; i < coins.length; i++){
+           for(int this_amount = coins[i]; this_amount < dp.length; this_amount++){
+               dp[this_amount] += dp[this_amount - coins[i]];
+           }
+       }              
+        return dp[amount];
+    }
+}
+
+*************************************************************
+
+This is the bottom up approach for solving this problem. the key is to find the right question. Each index makes this,
+this statement
+
+The number of ways to make cahnge using coin[i] as the last coin, is teh number of ways to make change using 
+amount - coins[i]. However, the key here is to not have duplicate problems. 
+
+If you try all coins on smaller values, say index 2 with coins [1,2,5]
+
+You end up with two ways to achieve 2;
+
+1 + 1
+2 + 0;
+
+then when you are trying for index 3, you achieve
+
+When going 3 - 1
+1 + 1 + 1
+2 + 1
+
+when going 3 - 2
+
+1 + 2;
+
+Here we have duplicated the (2 + 1). The way to avoid this is try one coin at at a time, this ensures that you will only
+
+ever visit an index one after you subtract the coin, and that if there is a duplicate potential, you will not run into it.

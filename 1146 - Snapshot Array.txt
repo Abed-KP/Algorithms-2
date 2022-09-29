@@ -1,0 +1,44 @@
+class SnapshotArray {
+    
+   List<TreeMap<Integer,Integer>> list;
+    int currentSnap;
+        
+    public SnapshotArray(int length) {
+        this.list = new ArrayList();        
+        this.currentSnap = 0;  
+        for(int i = 0; i < length; i++){
+            list.add(new TreeMap());
+            list.get(i).put(0,0);
+        }
+    }
+    
+    public void set(int index, int val) {
+        list.get(index).put(currentSnap,val);
+    }
+    
+    public int snap() {
+        return currentSnap++;
+    }
+    
+    public int get(int index, int snap_id) {
+        int key = list.get(index).floorKey(snap_id);
+        return list.get(index).get(key);
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.set(index,val);
+ * int param_2 = obj.snap();
+ * int param_3 = obj.get(index,snap_id);
+ */
+
+
+***************************************************************************************
+
+I learned about TreeMaps in this questions. They are essentially just sorted Hashmaps. They use node objects as
+TreeNodes. The objects have a key and a value, and are sorted like a heap based on key. The keys arer also hashed.
+
+This sorting allows for operations like floorKey(int num) which returns the key that is the greatest onenthat is
+lowere than num, or equa. CeilingKey is the same but opposite.

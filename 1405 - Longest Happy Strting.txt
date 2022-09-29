@@ -1,0 +1,117 @@
+class Solution {
+    HashMap < Character, Integer > map = new HashMap();
+    HashMap < Character, Integer > currCount = new HashMap();
+    public String longestDiverseString(int a, int b, int c) {
+
+        map.put('a', a);
+        map.put('b', b);
+        map.put('c', c);
+        currCount.put('a', 0);
+        currCount.put('b', 0);
+        currCount.put('c', 0);
+        PriorityQueue < Character > que = new PriorityQueue < > ((x, y) - > (map.get(y) - map.get(x)));
+        if (a != 0) que.add('a');
+        if (b != 0) que.add('b');
+        if (c != 0) que.add('c');
+
+        StringBuilder res = new StringBuilder();
+        while (!que.isEmpty()) addLetter(res, que);
+        return res.toString();
+    }
+
+    public void addLetter(StringBuilder res, PriorityQueue < Character > que) {
+        if (que.size() == 1 && currCount.get(que.peek()) == 2) {
+            que.poll();
+            return;
+        } else if (currCount.get(que.peek()) == 2) {
+            char temp = que.poll();
+            char secondGreatest = que.poll();
+            res.append(secondGreatest);
+            map.put(secondGreatest, map.get(secondGreatest) - 1);
+            currCount.put(secondGreatest, 1);
+            currCount.put(temp, 0);
+            que.add(temp);
+            if (map.get(secondGreatest) > 0) que.add(secondGreatest);
+        } else {
+            char greatest = que.poll();
+            res.append(greatest);
+            map.put(greatest, map.get(greatest) - 1);
+            currCount.put(greatest, currCount.get(greatest) + 1);
+            setZeroCounts(greatest);
+            if (map.get(greatest) > 0) que.add(greatest);
+        }
+    }
+
+    public void setZeroCounts(char c) {
+        for (char key: currCount.keySet())
+            if (key != c) currCount.put(key, 0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+****************************************************
+
+What worked here for me was the 2 step approach.
+
+1 - Say and write what needs to happen, in English, without considering code, Break down the problem smaller, and repeat
+	this step by step.
+2 - Note all the cases that could happen, and hand each appropriately.
+
+In this question Here is the English breakdown
+
+1 - Find greatest Element
+2 - Check if greatest element has already been written twice
+	if yes, append second greatest
+	if no, append this one
+3 - Now if leftover element count is 0, don't add it to que anymore
+4 - if que has only 1 element, and it has already been put there 2 times, end the program.
+
+
+I can the  translate this to programming.
+
+ 1 - Keeping track of greatest element can be done with a priority que.
+ 2 - handling the yes and no can be done with if statements
+ 3 - Fiding out if an alement has been added twice can be done with a counter and assosication with the element.
+ 4 - Finding out if I used up all my elements requirews associating that element with anothjer count
+		These Associations can be doneusing a HashMap
+
+
+
+
+
+/*
+a = 1, b = 1, c = 1
+"abc"
+
+a = 2, b = 1, c = 1
+"aabc"
+
+a = 2, b = 2, c = 2
+"aabbcc"
+
+a = 3, b = 2, c = 2
+"aabbcca"
+
+a = 3, b = 3, c = 2
+"aabbccab"
+
+a = 3, b = 3, c = 3
+aabbccabc
+
+a = 16, b = 3, c = 3
+aabaacaabaacaabaacaa
+
+
+
+
+
+

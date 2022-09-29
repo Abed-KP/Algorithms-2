@@ -1,0 +1,38 @@
+class Solution {
+    public int numMatchingSubseq(String s, String[] words) {
+        ArrayList<Node>[] buckets = new ArrayList[26];
+        for(int i = 0; i < buckets.length; i++) buckets[i] = new ArrayList();
+        
+        for(String word: words){
+            Node node = new Node(word);
+            buckets[node.word.charAt(0) - 'a'].add(node);
+        }
+        int total = 0;
+        for(int i = 0; i < s.length(); i++){
+            ArrayList<Node> oldBucket = buckets[s.charAt(i)- 'a'];
+            buckets[s.charAt(i)- 'a'] = new ArrayList();
+            for(Node node: oldBucket){
+                node.index++;
+                if(node.index == node.word.length()) total++;
+                else buckets[node.word.charAt(node.index) - 'a'].add(node);
+            }
+            oldBucket.clear();            
+        }
+        return total;
+    }
+}
+
+class Node{
+    int index;
+    String word;
+    Node(String word){
+        this.word = word;
+        index = 0;
+    }
+}
+
+*************************
+
+The idea here was to think of it simpler.  We just had to maintain all the words starting with theirn respective letters.
+We can store them in array indecies fro that. Then, every time we encounter a letter in th8e main word, we just visit that index, adjust
+the words and their pointers, and add them to their new lists.

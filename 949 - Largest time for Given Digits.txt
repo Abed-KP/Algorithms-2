@@ -1,0 +1,98 @@
+class Solution {
+    public String largestTimeFromDigits(int[] arr) {
+       List<String> list = new ArrayList();
+        getperm(arr,list);
+        
+        swap(arr,0,1);      
+        getperm(arr,list);
+        
+        swap(arr,0,2);
+        getperm(arr,list);
+               
+        swap(arr,0,3);
+        getperm(arr,list);
+        
+        if(list.size() == 0) return "";
+        String max = list.get(0);
+        
+        for(int i = 1; i < list.size(); i++){
+            if(Integer.parseInt(list.get(i)) > Integer.parseInt(max)){
+                max = list.get(i);
+            }
+        }
+        StringBuilder time = new StringBuilder(max);
+        time.insert(2,':');
+        return time.toString();
+        
+        
+        
+        
+    }
+    
+    public void getperm(int[] arr, List<String> list ){
+        StringBuilder res = new StringBuilder();
+        res.append(arr[0]);
+        res.append(arr[1]);
+        res.append(arr[2]);
+        res.append(arr[3]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());
+        
+        res.append(arr[0]);
+        res.append(arr[1]);
+        res.append(arr[3]);
+        res.append(arr[2]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());
+        
+        res.append(arr[0]);
+        res.append(arr[2]);
+        res.append(arr[1]);
+        res.append(arr[3]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());
+        
+        res.append(arr[0]);
+        res.append(arr[2]);
+        res.append(arr[3]);
+        res.append(arr[1]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());
+            
+        res.append(arr[0]);
+        res.append(arr[3]);
+        res.append(arr[1]);
+        res.append(arr[2]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());
+        
+        res.append(arr[0]);
+        res.append(arr[3]);
+        res.append(arr[2]);
+        res.append(arr[1]);
+        if(isvalid(res.toString()) == true) list.add(res.toString());
+        res.delete(0,res.length());        
+    }
+    public void swap(int[] arr, int a, int b){
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;        
+    }
+    
+    public boolean isvalid(String s){
+        if(s.charAt(0) - '0' > 2) return false;
+        if(s.charAt(1) - '0' > 3 && s.charAt(0) - '0' == 2  ) return false;
+        if(s.charAt(2) - '0' > 5) return false;
+        return true;
+    }
+}
+
+
+*********************************************************
+
+Here we chose to Get every permuation. Then we add all the permuations to a list if they pass the isValid()
+for the time. Teh we iterate through the list and choose the largest number. Finaslly we insert the ":" to make the string
+a time.
+
+This question taugt me to consider all possible permutations and 'brute force' when I am working with a fixed 'n' number
+of things. This way, I can find a simple solution and maintain O(1)

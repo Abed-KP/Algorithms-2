@@ -1,0 +1,59 @@
+class Solution {
+    public int longestStrChain(String[] words) {			### Lambda Style
+        HashMap<String,Integer> map = new HashMap();
+        Arrays.sort(words, (a,b) -> a.length() - b.length());
+        int max = 1;
+        
+        for(int i = 0; i < words.length; i++){  
+            map.put(words[i], 1);
+        for(int j = 0; j < words[i].length(); j++){
+                StringBuilder temp = new StringBuilder(words[i]);
+                temp.deleteCharAt(j);
+                if(map.containsKey(temp.toString())) {                             
+                map.put(words[i],Math.max(map.get(words[i]), map.get(temp.toString()) + 1)); 
+                }
+            }
+          max = Math.max(max, map.get(words[i]));
+        }
+        return max;       
+}
+    }
+
+
+***************************************************************
+								### Comparator style
+class Solution {
+    public int longestStrChain(String[] words) {
+        HashMap<String,Integer> map = new HashMap();
+        Arrays.sort(words, new Comparator<String>(){
+            public int compare (String a, String b){
+                return a.length() - b.length();
+            }
+        });
+        int max = 1;
+        
+        for(int i = 0; i < words.length; i++){  
+            map.put(words[i], 1);
+        for(int j = 0; j < words[i].length(); j++){
+                StringBuilder temp = new StringBuilder(words[i]);
+                temp.deleteCharAt(j);
+                if(map.containsKey(temp.toString())) {                             
+                map.put(words[i],Math.max(map.get(words[i]), map.get(temp.toString()) + 1)); 
+                }
+            }
+          max = Math.max(max, map.get(words[i]));
+        }
+        return max;       
+}
+    }
+
+
+
+**********************************
+
+What I learned here is that part of Dynamic programming, is this idea that the current step, is dependant on the past 
+step + only 1 more thing. In this case, only one letter being deleted tells us whether we found an increment. In
+the case of climb stairs or decode ways, we are simply adding the new character to all teh different ways we could decode
+before. 
+
+Also, It is good to use StringBuilder to delete characters in a string. 

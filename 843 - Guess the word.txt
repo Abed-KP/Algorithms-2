@@ -1,0 +1,104 @@
+/**
+ * // This is the Master's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface Master {
+ *     public int guess(String word) {}
+ * }
+ */
+class Solution {
+    public void findSecretWord(String[] wordlist, Master master) {
+        HashMap<String,Integer> count = new HashMap();
+        List<String> curr_cand = Arrays.asList(wordlist);
+        
+        for(int i = 0; i < wordlist.length; i++){
+            for(int j = 1; j < wordlist.length; j++){
+                if(getMatches(wordlist[i],wordlist[j]) != 0){
+                    count.put(wordlist[i],count.getOrDefault(wordlist[i],0) + 1);
+                    count.put(wordlist[j],count.getOrDefault(wordlist[i],0) + 1);
+                }
+                if(!count.containsKey(wordlist[i])) count.put(wordlist[i],0);
+            }
+        }
+        
+        Collections.sort(curr_cand, (a,b) -> (count.get(a) - count.get(b)) * -1);
+        while(true){
+            String currword = curr_cand.get(0);
+            int matches = master.guess(currword);
+            if(matches == 6) break;
+            else curr_cand = eliminate(currword,matches,curr_cand);
+        }                
+    }
+    
+    public int getMatches(String word1, String word2){
+        int matches = 0;
+        for(int i = 0; i < word1.length(); i++){
+            if(word1.charAt(i) == word2.charAt(i)) matches++;
+        }
+        return matches;
+    }
+    
+    public List<String> eliminate(String currword, int matches, List<String> curr_cand){
+        List<String> new_cand = new ArrayList();
+            for(int i = 1; i < curr_cand.size(); i++){
+                if(getMatches(currword, curr_cand.get(i)) == matches) new_cand.add(curr_cand.get(i)); 
+            }
+        if(new_cand.size() == 0){
+            curr_cand.remove(0);
+            return curr_cand;
+        }
+        return new_cand;
+        }           
+}
+
+
+*********************************************************************
+
+Alright, first, let us clarify something first.
+
+**The point of this question is not really to solve it in 10 guesses or less. The idea is to solve it in as few guesses as possible. It is important to make this clarification in an interview. Certain test-cases will never work if you only have 10 guesses. Ex. {"aaaaaa","bbbbbb", "cccccc,..... "zzzzzz. Also, it is emphasized that these words are RANDOMLY generated, thus a case like this is HIGHLY HIGHLY HIGHLY unlikely. So you approach the problem based on more likely scenarios, which in this case, is randomness. **
+
+Pre-requisites
+
+You have to undestand somethig about probability here.
+**** If i tell you I have a random letter in my back pocket, and ask you to guess any letter in the alphabet, the odds that you get it wrong is 25/26. This is because, out of the 26 charcters in the alphabet, only 1 of those letters will be the correct answer, and 25 will not be. Thus you have a 25/26 chance of getting it WRONG.
+
+Now, if we have a 2 six letter words. Let us say the first words is out SECRET word, and the second is a word in the list given to us. The same logic applies. In position 1 of our Secret word, there is a letter. We do not know what the letter is, but we have a letter also in position 1 of our second word. The odds of the the letter in position 1 in our secret word being the same as the letter in position 1 of our Secret word is again, 25/26, because of all the letters, only 1 will match, and 25 will not. So odds of not matching the letter in that position is 25/26. Then the same applies for the letters in position 2,3,4,5, and 6.
+
+**** Thus, if we want to calculate the probability of every one of those letters NOT MATCHING, then the probability is as follows
+** (25/26) * (25/26) * (25/26) * (25/26) * (25/26) * (25/26) = (25/26)^6 == 80%
+
+That is just how the math is done when calculating compounding probablities. Same case if you flip a coin twice and ask for the probability of "heads." Probability of getting head if only 1 toss is 50/100, probability of getting heads on 2 tosses is 50/100 * 50 / 100 == 25%.
+
+Anyways, now we have established that the probability of a word, not matching the Secret word in any positions is 80%. So we know that whenever we guess, we have an 80% chance of getting 0 matches. To understand how we are going to use probability that we came up with, we have to understand how we can narrow our options in the list.
+
+There are 7 cases that could happen when we make a guess. Either we get 0 matches with secret, or 1 match, or 2 matches.... or 6 matches. Here is what we do.
+
+**EXAMPLES
+
+0 Matches: Eliminate all words in the list that have 0 matches with the CURRENT GUESS word. Because if our current word has 0 matches with the Secret word, and another word matches this Current word in 1 place, it is guaranteed to not be the secret word.
+
+1 Matches: Eliminate all words in the list that don’t match exactly 1 match with this current word. If a word in the list has less than 1 match, then it is guaranteed to not be the secret word, because we know it will not have that 1 character in the right place, otherwise it would have matched this current word.
+
+Alternatively, if another word in the list has more than 1 matches with this current word, we know that it is not the secret word, because it is matching wrong characters in other places of this cur word that we know are not in secret because they did not match.
+
+2 Matches, 3 Matches, 4 Matches, and 5 Matches : Same logic as 1 Match.
+
+6 Matches: We found the Secret word.
+
+KEY IDEA: So that is our strategy. How do we pick our word? This is where the probability comes in. We know that no matter what word we pick in the Word List, there is an 80% chance it will match the Secret word in 0 places. So Master.guess will return 0 most of the time. We know based on the strategy above, that if we guess a word and we get 0 matches, then we eliminate all words in the word list that have even 1 match with the current word we guessed. So can you figure it out? How do we pick which word to guess now?
+
+We guess the word that has the largest "similarity" with other words in the word list first. As in the word that has the least number of 0 matches when it comes to comparing it with other words in the word list. So we Map each word to an Integer which represents the number of words in the word list in which this curr word can get atleast one Match.
+
+Then we start choosing words in descending order based on their map value.
+
+Recap: We know that most of the time, 80% of the time actually, Master.guess wil return 0, and we know that when we get a 0, we can eliminate all the words in the list that have 1 or more matches with the word that we guessed, thus choosing the word that has more words that match it in atleast 1 position will result in the most eliminations, and thus, narrowing our list down most.
+
+Note: Sure, there can be a better choice in the wordlist that will eliminate more words. but the key is to remember that you are working with a quality of randomness where you just don't know. So you use propbablity to your advantage. We know that 80 % of the time, we will get a 0 match with master.guess, so we adjust our strategy to tailor more to that scenario, because given a large enough data set, it is the best approach.\
+
+Here is how the code works.
+
+1 - Compare every two Words. Insert each word into a HashMasp, and map it to an Integer that will represent the number of other words in this list that have atleast 1 match with this word.
+2 - Sort the original list based on the mapped value, in descending order. So the greater the Integer, the more "first" it will be.
+3 - Start guessing from the begining of the list. Apply the strategy above based on the match. Add all the words that "pass" onto the next round into a new list, and then do the same thing with the new list. We do not have to sort, new list will already be sorted based on logic. If no words get eliminated, then update the list to the same list but without the element that you just guessed.
+
+**This question is about randomness and probabilty, not realy about the 10 guesses. Like I said at the begining. This code will fail given the above test case {aaaaaa,bbbbbb,cccccc.....zzzzzz}, but this code passes here, because...........RANDOM!

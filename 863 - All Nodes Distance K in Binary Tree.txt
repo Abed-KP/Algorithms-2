@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    HashMap<TreeNode,List<TreeNode>>  map = new HashMap();
+    List<Integer> kneighbors = new ArrayList();
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        traverse(root,null);
+      search(target,null,k,0);
+        return kneighbors;
+    }
+    public void traverse(TreeNode root, TreeNode prev){
+        if(root == null) return;
+        map.put(root,new ArrayList()); 
+        map.get(root).add(prev);
+        map.get(root).add(root.right);
+        map.get(root).add(root.left);
+        traverse(root.left,root);
+        traverse(root.right,root);
+    }
+    public void search(TreeNode curr, TreeNode prev, int k, int count){
+        if(curr == null) return;
+        if(count == k){
+            kneighbors.add(curr.val);
+            return;
+        }
+        List<TreeNode> adjacents = map.get(curr);
+        for(int i = 0; i <adjacents.size(); i++){
+            if(adjacents.get(i) != prev && adjacents.get(i) != null){
+                search(adjacents.get(i),curr,k,count+1);
+            }
+        }
+    }
+}
+
+
+The key here was realizing that all I had to do was start travelling from the target Node outwards until I have
+travelled K distance. To do that,, I created an adjacency list of all the neighbors of each node (the parent, and 2
+children are the only neigbors) and then I started traversing the neighbors starting from the target node outwards,
+and when I had moved k distance away, I added that Node to my resultant list.

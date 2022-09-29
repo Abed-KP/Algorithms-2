@@ -1,0 +1,25 @@
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        int sum = 0;
+        for(int i = 0; i < k; i++){
+         sum += cardPoints[i];
+        }
+         int copysum = sum;
+         int j = k - 1;
+        for(int i = cardPoints.length - 1; i >= cardPoints.length - k; i--){
+            copysum = copysum - cardPoints[j--];
+            copysum += cardPoints[i];
+            sum = Math.max(copysum,sum);
+        }
+        return sum;
+    }
+}
+
+******************************
+The new technique, of trying to find all possibilities while maintaing optimal time complexity is the strategy here.
+
+The key is summing up to the first K elements, then shaving off one from the end of the first K elements, and adding one 
+
+from the begining of the end of the array. One by one, every scenario happens and we keep track using a Max variable
+
+and Math.max()

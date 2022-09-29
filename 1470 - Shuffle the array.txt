@@ -1,0 +1,25 @@
+class Solution {
+    public int[] shuffle(int[] nums, int n) {
+        int[] arr = new int[nums.length];
+        int i = 0; 
+        int j = n;
+        int counter = 0;
+        while(counter != nums.length){
+            if(counter % 2 == 0){
+                arr[counter] = nums[i];
+                i++;
+            }
+            else{
+                arr[counter] = nums[j];
+                j++;
+            }
+            counter++;
+        }
+        return arr;
+    }
+}
+
+
+**********************************************
+
+Sometimes, there is no crazy solution, so it is always recommended to give the approach that is still linear but not perfect.

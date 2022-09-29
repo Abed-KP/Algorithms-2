@@ -1,0 +1,37 @@
+class Solution {
+    public int numSplits(String s) {
+        HashMap<Integer,Integer> leftmap = new HashMap();
+        HashMap<Integer,Integer> rightmap = new HashMap();
+        HashSet<Character> uniq = new HashSet();
+        
+        for(int i = 0; i < s.length(); i++){
+            uniq.add(s.charAt(i));
+            leftmap.put(i,uniq.size());
+        }
+        
+        uniq.clear();
+        
+        for(int i = s.length() - 1; i >= 0; i--){
+            uniq.add(s.charAt(i));
+            rightmap.put(i,uniq.size());
+        }
+        
+        int max  = 0;
+        for(int i = 0; i < s.length() - 1; i++){
+            if(leftmap.get(i) - rightmap.get(i+1) == 0) max++;
+        }
+        return max;
+
+        
+        
+    }
+}
+
+*************************************************************
+
+The key when it comes to understanding this question is this. I have to understand the question very well.
+
+Next, THIS IS KEY!!!
+
+Break down the solution into step by step chunks. It doesn't matter if it "looks" bad, even if the solution seems like it'
+is quadratic, you have to understand that solution, and then try to find a way to accomplish the same thing, in less moves. 

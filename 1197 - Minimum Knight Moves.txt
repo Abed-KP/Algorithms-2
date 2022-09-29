@@ -1,0 +1,63 @@
+class Solution {
+    public int minKnightMoves(int x, int y) {
+        
+         int[][] moves = {{1, 2}, {2, 1}, {2, -1}, {1, -2},
+                {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}};
+        
+        int upBound, downBound, rightBound, leftBound;
+        upBound = y >= 0? y + 4:  4;
+        downBound = y >= 0? -4: y - 4;
+        rightBound = x >= 0? x + 4: 4;
+        leftBound = x >= 0? -4: x - 4;
+        
+        Queue<Node> que = new LinkedList();
+        HashSet<List<Integer>> set = new HashSet();
+        que.add(new Node(List.of(0,0),0));
+        
+        while(!que.isEmpty()){
+            Node curr = que.poll();
+            if(curr.location.get(0) == x && curr.location.get(1) == y) return curr.score;
+            for(int[] move: moves){
+                int newX = curr.location.get(0) + move[0];
+                int newY = curr.location.get(1) + move[1];
+                if(newX >= leftBound && newX <= rightBound && newY >= downBound && newY <= upBound &&
+                  !set.contains(List.of(newX,newY))){
+                    set.add(List.of(newX,newY));
+                    que.add(new Node(List.of(newX,newY),curr.score + 1));
+                }
+            }
+        }
+        return 0;
+    }
+}
+
+class Node{
+    List<Integer> location;
+    int score;
+    Node(List<Integer> location, int score){
+        this.location = location;
+        this.score = score;
+    }
+}
+*********************************
+
+
+I learned quite a lot about BFS here, as well as infinite planes.
+
+Ihings I learned.
+
+1 - You have to use Lists and not Arrays in a hashset to store coordinates.
+2 - Given a point in an infinite plane, depening on the problem, we can consider only the |x| & |y| of the point due
+to the symetric nature of a coordinate plane.
+
+
+Approach:
+
+I idea here was to treat my starting point as the origin (0,0). Given any point, (-x,y),(x,-y),(-x,-y), I will
+consider the point (|x|,|y|). Because the distance from (0,0) to any of those points is the same due to symmetry.
+
+After that, I can use a BFS to find the shortest path, however I only care about the first quarate (+,+), So i will
+set my boundary to that only, and permit '-2' in both directions to edge cases. Anything more than that is excessive.
+
+
+No

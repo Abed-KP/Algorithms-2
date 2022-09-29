@@ -1,0 +1,65 @@
+class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {    
+        if(root == null) return false;
+        boolean temp = false;						/ Recursive
+        if(root.val == subRoot.val){
+            temp = compareTrees(root, subRoot);
+        }  
+        boolean left = isSubtree(root.left,subRoot);
+        boolean right = isSubtree(root.right, subRoot);
+        
+        if(left == true || right == true || temp == true) return true;
+        else return false;
+    }
+    
+    public boolean compareTrees(TreeNode root1, TreeNode root2){
+        if(root1 == null & root2 == null) return true;
+        if(root1 == null || root2 == null) return false;
+        if(root1.val != root2.val) return false;
+        boolean left = compareTrees(root1.left, root2.left);
+        boolean right = compareTrees(root1.right, root2.right);
+        
+        if(left == false || right == false) return false;
+        return true;
+    }
+}
+
+
+************************************
+
+the main lesson in this question is to always have your if statements aligned properly.
+
+In other words, make sure  that you check if an object is null prior to working with it.
+
+ALSO, a hufge local lesson is to always consider Queues when doing anything with a binary tree.
+
+*****************************************************
+
+class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {    
+        if(root == null) return false;
+        Queue<TreeNode> que = new LinkedList();
+        que.add(root);
+        while(!que.isEmpty()){
+            TreeNode node = que.poll();
+            if(node.val == subRoot.val) {
+                boolean check = compareTrees(node,subRoot);
+                if(check == true) return true;
+            }            
+            if(node.left != null) que.add(node.left);
+            if(node.right !=  null) que.add(node.right);
+        }
+        return false;
+    }
+    
+    public boolean compareTrees(TreeNode root1, TreeNode root2){
+        if(root1 == null & root2 == null) return true;
+        if(root1 == null || root2 == null) return false;
+        if(root1.val != root2.val) return false;
+        boolean left = compareTrees(root1.left, root2.left);
+        boolean right = compareTrees(root1.right, root2.right);
+        
+        if(left == false || right == false) return false;
+        return true;
+    }
+}

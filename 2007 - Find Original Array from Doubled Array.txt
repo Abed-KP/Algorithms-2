@@ -1,0 +1,55 @@
+class Solution {
+
+  public int[] findOriginalArray(int[] changed) {
+    if (changed.length % 2 != 0) return new int[0];
+    HashMap < Integer, Integer > map = new HashMap();
+    List < Integer > list = new ArrayList();
+
+    for (int num: changed) map.put(num, map.getOrDefault(num, 0) + 1);
+    Arrays.sort(changed);
+    if (map.containsKey(0)) {
+      if (map.get(0) % 2 == 1) return new int[0];
+      for (int i = 0; i < map.get(0) / 2; i++) list.add(0);
+      map.remove(0);
+    }
+
+    for (int i = 0; i < changed.length; i++) {
+      if (!map.containsKey(changed[i]) || !map.containsKey(changed[i] * 2)) continue;
+      int single = changed[i];
+      int doubled = changed[i] * 2;
+      list.add(single);
+      map.put(single, map.get(single) - 1);
+      map.put(doubled, map.get(doubled) - 1);
+      if (map.get(single) == 0) map.remove(single);
+      if (map.get(doubled) == 0) map.remove(doubled);
+    }
+    if (list.size() != changed.length / 2) return new int[0];
+    int[] res = new int[list.size()];
+    for (int i = 0; i < res.length; i++) res[i] = list.get(i);
+    return res;
+
+  }
+}
+
+
+************************
+
+To solve this problem. The key was breaking it down, defining what needs to happen and the relathionship between
+the relevant concepts. 
+
+The idea here is to sort an array and count the fequencies of every element.
+
+First we take care of the '0' edge cases. We just count them, and add half of the count to the array
+
+Next, you started moving through the sorted array, decrementing the frequency of a number and its double.
+if they hit 0, we remove them from the map.
+
+Whenever we encounter a number that is not in the map or has a parent not in the map, 
+we just continue and skip over the iteration.
+
+This will happen in two cases. Either we see a number that never had a double, or we see a number we have already removed
+from the map due to being the double of another number.
+
+In the second casem, that is good, we do not want use the same element twice. The first case allows us to check if the new array
+is half the size of the second array. If we skip over an element with no double, then not adding it will result in that never
+happening.

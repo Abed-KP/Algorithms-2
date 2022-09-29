@@ -1,0 +1,42 @@
+class Solution {
+    HashMap<String,TreeNode> map = new HashMap();
+    HashMap<String,Integer> count = new HashMap();
+    
+    List<TreeNode> list = new ArrayList();
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverse(root);
+        for(String s : count.keySet()) {
+            if(count.get(s) > 1) list.add(map.get(s));
+        }
+        return list;
+    }
+    public String traverse(TreeNode root){
+        if(root == null) return "x";
+        
+        StringBuilder res = new StringBuilder();
+        res.append(root.val);
+        res.append(" ");  // The space is for the case where you see '1 followed by 11' vs '11 followed by 1';
+        res.append(traverse(root.left));
+        res.append(traverse(root.right));
+        
+        String hash = res.toString();
+        if(!map.containsKey(hash)){
+            map.put(hash,root);
+            count.put(hash,1);
+        }
+        else count.put(hash,count.get(hash) + 1);
+        return hash;
+    }
+}
+
+
+
+**********************************
+
+The idea here was to develop a 'hash', but constructing a string that defines the values in each path.
+
+One important case to watch out for is the case where you see '1 followed by 11' vs '11 followed by 1'
+
+
+I could have been able to solve this if I saw that I needed to use the structure and values to develop something 
+unique.

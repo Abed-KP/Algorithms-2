@@ -1,0 +1,33 @@
+class Solution {
+    public int minTimeToVisitAllPoints(int[][] points) {
+        
+      if(points.length == 0 || points == null){
+          return 0;
+      }  
+        int total = 0;
+        for(int i = 0; i < points.length - 1; i++){
+            int xMove = Math.abs(points[i][0] - points[i+1][0]);
+            int yMove = Math.abs(points[i][1] - points[i+1][1]);
+            total += Math.min(xMove,yMove) + Math.abs(xMove-yMove);           
+        }
+        return total;
+        
+        
+    }
+}
+
+************************
+
+The answer here was found by this Thought process.
+
+I decided that it is most beneficial to make as many diagonal moves as posible. therefore, we start by making diagonal 
+
+moves until we reach either the x or the y, then theb rest is horizantel or vertical. By subtracting one coordinate from
+
+the other, we get the the number of moves that have to be made in each direction. Then, by taking the minimum of that (x,y)
+
+we end up with the most amount of diagonal moves we could make, then we take the difference between both, and that gives us
+
+how many either vertical or horizantel moves we have to make. We add Diagonal and vertical or horizantal each time, and in
+
+the end, we have total amount of time.

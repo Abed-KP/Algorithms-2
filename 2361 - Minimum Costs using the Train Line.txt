@@ -1,0 +1,82 @@
+class Solution {
+    public long[] minimumCosts(int[] regular, int[] express, int expressCost) {
+        int n = express.length;
+        long[] minReg = new long[n+1];
+        long[] minExpress = new long[n+1];
+        minExpress[0] = expressCost;
+        long[] res = new long[n];
+        
+        for(int i = 0; i < n ; i++){
+            long lastRegular = minReg[i];
+            long lastExpress = minExpress[i];
+            minReg[i+1] = Math.min(lastRegular,lastExpress) + regular[i];
+            minExpress[i+1] = Math.min(lastRegular + expressCost, lastExpress) + express[i];
+            res[i] = Math.min(minReg[i+1],minExpress[i+1]);
+        }
+        return res;
+        
+    }
+}
+
+*****************************************************************************************************************
+
+The idea here is this:
+A regular stop N can be reached either by going from (N-1) regular stop to N regular stop 
+Or going from (N-1) express stop to n regular stop. 
+The same applies to express stop N.
+
+I could not solve this because I was seeing this question in 1 dimension. I was looking at City N and trying
+to find a solution Using DP. I asked myself, The minimum way to get to city N is what? That was not enough though
+because the answer was not simply the minimum way to get to City N-1;
+
+See this Example:
+
+// regular = [1,6,9,5]
+// express = [5,2,3,10]
+// expressCost = 8
+
+// Reg [0,1,7,16,19]
+// Exp [8,13,11,14,24]
+
+// Output [1,7,14,19]
+
+As you can see, the minimum way to get to City 3 is 14. If we say the min way to get to city 3 is the min
+way to get to city 2 + Math.min(currRegular,currExpress + expresscost,currExpress). This does not work.
+
+It does not work because to get 7. We hard to take Regular train from 0-1 & 1-2. However, to get 14 in City 3
+we Hade to take Regular 0-1 Express 1-2 and Express 2-3.
+
+The mathmematical reasoning is the cost using regular from 1-2 & 2-3 is worse than switching and getting charged
+expressCost + express[1] + express[2].
+
+So ultimately, the dp subproblem is this.
+
+City N can be reached from City N-1 using regular, or from City N-1 using Express.
+
+One way to explain this is this. At each city, starting at 0, we have 2 decisions. 
+
+1 - We take the Regular train
+2 - We take the Express train
+
+We can get all possible paths by drawing out a tree that shows what we took at each step. Every possible change in trains.
+
+However, this tree will quickly grow to the size of 2^N. The benefit of drawing this out is that it allows
+us to model changing trains.
+
+But we can also do this by keeping track of 2 arrays.
+
+minReg: Where minReg[i] is the cost of getting to city N using the regular train this time.
+minExp: Where  minExp[i] is the cost of getting to city N using the express train this time.
+
+Now this logic comes in:
+A regular stop N can be reached either by going from (N-1) regular stop to N regular stop 
+Or going from (N-1) express stop to n regular stop. 
+The same applies to express stop N.
+
+
+So when we get to City N, we have to know the price of getting there from being on the express train, or from
+being on the regular train. This allows us to model all the tree paths. In the future, build a tree of all possible
+outcomes, and then see what is happening using this algorithm
+
+
+

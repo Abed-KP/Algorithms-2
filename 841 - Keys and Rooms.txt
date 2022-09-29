@@ -1,0 +1,44 @@
+class Solution {
+    List<List<Integer>> rooms;
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        this.rooms = rooms;
+        if(rooms.size() == 0 || rooms.get(0).size() == 0) return false;
+        List<Integer> list = rooms.get(0);
+        HashSet<Integer> keychain = new HashSet();
+        for(int i = 0; i < list.size(); i++) keychain.add(list.get(i));
+        
+        for(int i = 0; i < list.size(); i++) collectKeys(keychain, list, rooms.get(list.get(i)));
+         return list.size() == rooms.size() - 1;       // -1 because rooms has the 0 room. 
+    }
+    
+    public void collectKeys(HashSet<Integer> keychain, List<Integer> list, List<Integer> room ){
+        for(int i = 0; i < room.size(); i++){
+            int key = room.get(i);
+            if(!keychain.contains(key) && key != 0){
+                keychain.add(key);
+                list.add(key);
+            }
+        }
+    }
+}
+
+*****************************************************************************
+
+Local lesson: 
+
+Here I learned that in the case I want to iterate over a Hashset and modify it, I will run into a concurrent modification
+error. To fix this, you can use a list and the HashSet. Traverse the list and append to both.
+
+Global lesson.
+
+Again the way I solved this ios using the 2 step disect method.
+
+1 - define the problem, note observations, say out loud what needs to happen for it to work. Break it down.
+2 - break it down to all possible cases. In this case it was, 
+
+I enter the first room using the first key in my 0 room.
+
+in this new room, 
+
+Case 1: I see a key that I already have - do nothing 	
+Case 2: I see a key that I do not have - append to list of keys and visit that room later.

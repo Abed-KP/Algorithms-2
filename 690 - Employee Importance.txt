@@ -1,0 +1,47 @@
+class Solution {
+    int total = 0;
+    public int getImportance(List < Employee > employees, int id) {
+        HashMap < Integer, Employee > map = new HashMap();
+        for (int i = 0; i < employees.size(); i++) map.put(employees.get(i).id, employees.get(i));
+        DFS(id, map);
+        return total;
+    }
+    public void DFS(int id, HashMap < Integer, Employee > map) {
+        total += map.get(id).importance;
+        int j = 0;
+        while (j < map.get(id).subordinates.size()) {
+            DFS(map.get(id).subordinates.get(j),map);
+            j++;
+        }
+    }
+}
+
+
+****************************************************
+
+This question is a reiteration of the idea that when you are doing the same exact thing over and over,
+ the key is recursion.
+
+
+***************************************
+					# This is the same answer, but without using a class level variable.
+class Solution {
+    public int getImportance(List < Employee > employees, int id) {
+        HashMap < Integer, Employee > map = new HashMap();
+        for (int i = 0; i < employees.size(); i++) map.put(employees.get(i).id, employees.get(i));
+        return DFS(id, map);
+   
+        
+    }
+    public int DFS(int id, HashMap < Integer, Employee > map) {
+        int total = map.get(id).importance;
+        int j = 0;
+        while (j < map.get(id).subordinates.size()) {
+           total += DFS(map.get(id).subordinates.get(j),map);
+            j++;
+        }
+        return total;
+    }
+}
+
+

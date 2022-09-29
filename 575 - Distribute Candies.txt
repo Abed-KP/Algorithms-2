@@ -1,0 +1,22 @@
+class Solution {
+    public int distributeCandies(int[] candyType) {
+        
+        
+        int candyEaten = 0;
+        int max = candyType.length/2;
+        HashSet<Integer>  set = new HashSet();
+        
+        for (int i = 0; i < candyType.length; i++){
+            
+            if (candyEaten == max){
+                return candyEaten;
+            }
+            if (!set.contains(candyType[i])){
+                candyEaten++;
+                set.add(candyType[i]);
+            }
+        }
+        
+        return candyEaten;
+    }
+}

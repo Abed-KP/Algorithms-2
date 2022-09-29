@@ -1,0 +1,33 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        
+        int[] charmap = new int[26];
+        for(char c : tasks){
+            charmap[c-'A']++;
+        }
+        Arrays.sort(charmap);
+        int max = charmap[25] - 1;
+        int idles = max * n;
+        
+        for(int i = charmap.length - 2; i >= 0; i-- ){
+            idles -= Math.min(max, charmap[i]);
+        }
+        
+        return idles > 0? tasks.length + idles: tasks.length;
+        
+        }
+    }
+
+
+*****************************************************
+
+Here, I learned the value of interpreting a questionn differently. In this case, the key is to realize,
+that I must start at the most occuring element, and until I can reach that most occuring element again, I have to do a
+certain number of things. This is why "max = charmap[25] - 1". if n is 2 (A) and max is two, that means, that in the first
+'1' of max I have to find 2 things to do before I can come back to 'A'. In the stock example, I can do a 'B', and then
+I have to sit idle, until I reach the next round of doing things. 
+
+max = charmap[25] - 1 represents how many 'rounds' of doing things there is, and in each round, we have to wait 'n'
+units before we can do things again. When we subtract in the second loop, we are subtracting, say the 'B' from all rounds,
+and in the end, we are left with all the 'idle' times we have to spend to make it work. 
+

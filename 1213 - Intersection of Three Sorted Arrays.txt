@@ -1,0 +1,66 @@
+class Solution {
+    public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+     
+        
+    HashSet<Integer> h1 = new HashSet();
+    HashSet<Integer> h2 = new HashSet();
+    List<Integer> list = new ArrayList();
+    int n1 = arr1.length;
+    int n2 = arr2.length;
+        
+        for (int i = 0; i < Math.max(n1,n2); i++){
+            if (i < n1) h1.add(arr1[i]);
+            if (i < n2) h2.add(arr2[i]);
+        }
+
+        for (int i = 0; i < arr3.length; i++ ){            
+            if (h1.contains(arr3[i]) && h2.contains(arr3[i])){
+                list.add(arr3[i]);
+            }
+        }
+        return list;
+    }
+}
+
+
+
+
+class Solution {
+    public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+        
+        List<Integer> list = new ArrayList();
+        int p1 = 0;
+        int p2 = 0; 
+        int p3 = 0;
+        
+        while (p1 < arr1.length && p2 < arr2.length && p3 < arr3.length){
+            if (arr1[p1] == arr2[p2] && arr2[p2] == arr3[p3]){
+                list.add(arr1[p1]);
+                p1++;
+                p2++;
+                p3++;
+            }
+            else if(arr1[p1] <= arr2[p2] && arr1[p1] <= arr3[p3]){
+                p1++;
+            }
+             else if(arr2[p2] <= arr1[p1] && arr2[p2] <= arr3[p3]){
+                p2++;
+            }
+             else if(arr3[p3] <= arr2[p2] && arr3[p3] <= arr1[p1]){
+                p3++;
+            }
+        }
+        return list;
+    }
+}
+
+
+
+*************************************************************************************************************************
+
+I learned thast you can use multiple hashsets and then check the final one to see how many elemets are in all of them. 
+
+
+In the second approach, I learned that when moving three pointers, each iteration can focus on a single pointer. So here, 
+we check if p1 < p2, then we increment p1, and we dont do any checking until the next iteration. Also to break down 
+the problem into each case that could happen. This always solves problems!

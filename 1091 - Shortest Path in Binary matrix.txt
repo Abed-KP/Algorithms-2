@@ -1,0 +1,87 @@
+class Solution {
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        if (grid[0][0] == 1) return -1;
+        int n = grid.length;
+        Queue < Node > que = new LinkedList();
+        boolean[][] visited = new boolean[n][n];
+        Node first = new Node(1, 0, 0);
+        que.add(first);
+
+
+        while (!que.isEmpty()) {
+
+            Node curr = que.poll();
+            if (curr.position[0] == n - 1 && curr.position[1] == n - 1) return curr.distance;
+
+
+            int i = curr.position[0];
+            int j = curr.position[1];
+
+            if (i < n - 1 && visited[i + 1][j] == false && grid[i + 1][j] == 0) {
+                visited[i + 1][j] = true;
+                que.add(new Node(curr.distance + 1, i + 1, j));
+            }
+            if (i > 0 && visited[i - 1][j] == false && grid[i - 1][j] == 0) {
+                visited[i - 1][j] = true;
+                que.add(new Node(curr.distance + 1, i - 1, j));
+            }
+            if (j > 0 && visited[i][j - 1] == false && grid[i][j - 1] == 0) {
+                visited[i][j - 1] = true;
+                que.add(new Node(curr.distance + 1, i, j - 1));
+            }
+            if (j < n - 1 && visited[i][j + 1] == false && grid[i][j + 1] == 0) {
+                visited[i][j + 1] = true;
+                que.add(new Node(curr.distance + 1, i, j + 1));
+            }
+            if (i < n - 1 && j < n - 1 && visited[i + 1][j + 1] == false && grid[i + 1][j + 1] == 0) {
+                visited[i + 1][j + 1] = true;
+                que.add(new Node(curr.distance + 1, i + 1, j + 1));
+            }
+
+            if (i < n - 1 && j > 0 && visited[i + 1][j - 1] == false && grid[i + 1][j - 1] == 0) {
+                visited[i + 1][j - 1] = true;
+                que.add(new Node(curr.distance + 1, i + 1, j - 1));
+            }
+            if (i > 0 && j < n - 1 && visited[i - 1][j + 1] == false && grid[i - 1][j + 1] == 0) {
+                visited[i - 1][j + 1] = true;
+                que.add(new Node(curr.distance + 1, i - 1, j + 1));
+            }
+            if (i > 0 && j > 0 && visited[i - 1][j - 1] == false && grid[i - 1][j - 1] == 0) {
+                visited[i - 1][j - 1] = true;
+                que.add(new Node(curr.distance + 1, i - 1, j - 1));
+            }
+
+
+        }
+        return -1;
+    }
+
+    class Node {
+        int distance;
+        int[] position;
+
+        Node(int distance, int i, int j) {
+            this.distance = distance;
+            position = new int[2];
+            position[0] = i;
+            position[1] = j;
+        }
+    }
+}
+
+
+
+
+
+
+*********************************************************************************************
+
+
+This Question was a classic BFS type of questions.
+
+The idea to remember, is that 'shortest path' implies BFS. This is because you get all the neighbor nodes first, then go through
+all of them and check if they are the target. if not, you add thesir neighbors to the queue. Now you have "the next layer".
+You do this on and on until you find the target node in a 'layer.'
+
+Also, I realized that i get represent a visited hashset for matrix, using a matrix, and not a hashset, because it will not 
+work because of how arrays are represented.

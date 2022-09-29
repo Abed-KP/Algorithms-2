@@ -1,0 +1,51 @@
+class Solution {
+    public int[][] highFive(int[][] items) {
+        
+        HashMap<Integer, PriorityQueue<Integer>> map = new HashMap();
+      
+        
+    for(int i = 0; i < items.length; i++){
+        
+        
+        if (!map.containsKey(items[i][0])){
+            
+            map.put(items[i][0], new PriorityQueue());
+            map.get(items[i][0]).add(items[i][1]);
+                    
+        }
+        else{
+            map.get(items[i][0]).add(items[i][1]);
+        }
+        
+    }
+        
+          int[][] array = new int[map.size()][2];
+                int i = 0;
+            for(Map.Entry<Integer,PriorityQueue<Integer>> entry : map.entrySet()){
+                
+                while (map.get(entry.getKey()).size() != 5){ 
+                   map.get(entry.getKey()).poll(); 
+                }
+                array[i][0] = entry.getKey();
+                while (map.get(entry.getKey()).size() != 0){
+                    
+                array[i][1] += map.get(entry.getKey()).poll();
+                    }
+                array[i][1] = array[i][1] / 5;
+                i++;
+            }
+        
+   
+        return array;
+    }
+}
+
+
+
+
+***************************************************************************************************************************
+
+
+I learned about the importance of utilizing a PQ when I need a sorted list, and that a HASHMAP pointing to a Data
+
+is a very powerful thing.

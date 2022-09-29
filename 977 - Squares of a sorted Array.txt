@@ -1,0 +1,59 @@
+class Solution {
+    public int[] sortedSquares(int[] nums) {
+       
+        int[] sqsort = new int[nums.length];
+        int i = 0;
+        
+        while(i < nums.length){
+            if(nums[i] >= 0){
+                break;
+            }
+            i++;
+        }
+        
+        if (i == 0){
+            for (int j = 0; j < nums.length; j++){
+                nums[j] = nums[j] * nums[j];
+            }
+            return nums;
+        }
+        
+        int indexpointer = 0;
+        int j = i - 1;
+        while(i < nums.length || j >= 0){
+             int n1 = i < nums.length? nums[i] : Integer.MAX_VALUE;
+             int n2 = j >= 0? nums[j] : Integer.MAX_VALUE;
+             if (n1 < Math.abs(n2)){
+                 sqsort[indexpointer] = n1 * n1;
+                 indexpointer++;
+                 i++;
+             }
+            else if(Math.abs(n2) < n1){
+                 sqsort[indexpointer] = n2 * n2;
+                 indexpointer++;
+                 j--;
+            }  
+            else {
+                 sqsort[indexpointer] = n1 * n1;
+                 indexpointer++;
+                 sqsort[indexpointer] = n2 * n2;
+                 indexpointer++;
+                 i++;
+                j--;
+            }
+        }
+        return sqsort;
+    }
+}
+
+************************************************************************
+
+Here, the key is realizing that all you have to do is find the first positive number in the array. Then you have
+
+2 pointers, 1 that startson that index, and another that starts one below that index. the first will move right, and
+
+second will move left. You will compare the right and absolute of left each time, and the lesser will take the next 
+
+available spot in the new array.
+
+If the first positive number is the first index of the nums array, then just loop and square each index and return it. 

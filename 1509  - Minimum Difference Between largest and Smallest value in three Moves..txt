@@ -1,0 +1,149 @@
+class Solution {
+    public int minDifference(int[] nums) {
+     
+        if(nums.length <= 4) return 0;
+        Arrays.sort(nums);
+        int removeEnd = nums[nums.length - 4] - nums[0];
+        int removeBeg = nums[nums.length - 1] - nums[3];
+        int twoEnd_oneStart = nums[nums.length - 3] - nums[1];
+        int oneEnd_twoStart = nums[nums.length - 2] - nums[2];
+        
+        int firstmin = Math.min(removeEnd,removeBeg);
+        int secondmin = Math.min(twoEnd_oneStart, oneEnd_twoStart);
+        
+        return Math.min(firstmin,secondmin);
+        
+        
+        
+    }
+}
+********************************************************************
+In this question, I realized multiple new startegies.
+
+1 - How to change a builtin priorityQueue into a max heap - Either pass Comparator with 'Integer" instead of int, or
+Collections.reverseorder.
+
+2 - I can use a minheap to store the 'n' largest elements, and a maxheap to store the 'n' minimum elements.
+
+3 - I realized that I should not see things in absolute. I was either shaving off the last 3 elements, or 
+
+the first 3 elements. Sometimes, I learned, Covering every possible scenario is only a couple more steps. In this case,
+
+it was Shave last 3, Shave first 3, Shave 1 start and 2 end, Shave 2 Start and 1 end. 
+
+The shaving strategy works when the array is sorted, but because we only need the first 4 and last 4, we can use the n
+
+priorityQue method to get them without O(nlogn), but rather, O(n).
+
+*********************************************************************
+
+class Solution {
+    public int minDifference(int[] nums) {
+        if(nums.length <= 4) return 0;
+       PriorityQueue<Integer> maxq = new PriorityQueue();
+       PriorityQueue<Integer> minq = new PriorityQueue(new Comparator<Integer>(){
+           public int compare(Integer a, Integer b){
+               return (a - b) * -1;
+           }
+       });
+      
+        for(int i = 0; i < nums.length; i++){
+            if(minq.size() < 4){
+                minq.add(nums[i]);
+                maxq.add(nums[i]);
+            }else
+            {
+            
+            if(nums[i] > maxq.peek()){
+                maxq.poll();
+                maxq.add(nums[i]);
+            }
+            
+            if(nums[i] < minq.peek()){
+                minq.poll();
+                minq.add(nums[i]);
+            }
+            }
+        }
+        
+        int smallest4 =  minq.poll();
+        int smallest3 = minq.poll();
+        int smallest2 = minq.poll();
+        int smallest = minq.poll();
+        
+        int biggest4 = maxq.poll();
+        int biggest3 = maxq.poll();
+        int biggest2 = maxq.poll();
+        int biggest = maxq.poll();
+        
+        int removeEnd = biggest4 - smallest;
+        int removeBeg = biggest - smallest4;
+        int twoEnd_oneStart = biggest3 - smallest2;
+        int oneEnd_twoStart = biggest2 - smallest3;
+        
+        int a = Math.min(removeEnd,removeBeg);
+        int b = Math.min(twoEnd_oneStart, oneEnd_twoStart);
+        
+        return Math.min(a,b);
+
+              
+    }
+}
+
+*************************************************************
+							######### This is the same Solution, but with lambda Syntax
+class Solution {
+    public int minDifference(int[] nums) {
+        if(nums.length <= 4) return 0;
+       PriorityQueue<Integer> maxq = new PriorityQueue();
+       PriorityQueue<Integer> minq = new PriorityQueue<>(
+      (a,b) -> (a-b) * -1 );
+          
+      
+        for(int i = 0; i < nums.length; i++){
+            if(minq.size() < 4){
+                minq.add(nums[i]);
+                maxq.add(nums[i]);
+            }else
+            {
+            
+            if(nums[i] > maxq.peek()){
+                maxq.poll();
+                maxq.add(nums[i]);
+            }
+            
+            if(nums[i] < minq.peek()){
+                minq.poll();
+                minq.add(nums[i]);
+            }
+            }
+        }
+        
+        int smallest4 =  minq.poll();
+        int smallest3 = minq.poll();
+        int smallest2 = minq.poll();
+        int smallest = minq.poll();
+        
+        int biggest4 = maxq.poll();
+        int biggest3 = maxq.poll();
+        int biggest2 = maxq.poll();
+        int biggest = maxq.poll();
+        
+        int remove3End = biggest4 - smallest;
+        int remove3Beg = biggest - smallest4;
+        int twoEnd_oneStart = biggest3 - smallest2;
+        int oneEnd_twoStart = biggest2 - smallest3;
+        
+        int a = Math.min(remove3End,remove3Beg);
+        int b = Math.min(twoEnd_oneStart, oneEnd_twoStart);
+        
+        return Math.min(a,b);
+
+        
+        
+    }
+}
+
+
+
+

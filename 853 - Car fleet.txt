@@ -1,0 +1,39 @@
+class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+        HashMap<Integer,Integer> map = new HashMap();
+        double[] arr = new double[position.length];
+        int n = position.length;
+        for(int i = 0; i < position.length; i++){
+            map.put(position[i],speed[i]);
+        }
+        Arrays.sort(position);
+        for(int i = 0; i < position.length; i++){
+            arr[i] = (double) (target - position[i]) / map.get(position[i]);
+        }
+        
+        int i = arr.length - 1;
+        int j = arr.length - 2;
+        while(j >= 0){
+            if(arr[j] <= arr[i]){
+                j--;
+                n--;
+            }
+            else{
+                i = j;
+                j--;                    
+            }
+        }
+        return n;
+          
+    }
+}
+
+****************************
+
+I learned a couple things here. Casting for instance, all it involves is typing "( type name )" before value.
+
+I also learned to think this: "What other factors in this question can give me the answer. In this case, it was calculating
+
+the time, and checking, 'Hey, if this car was in an earlier position, but finished before with its given sped than the car
+
+ahead it, then it must have collided at some point.

@@ -1,0 +1,63 @@
+class Solution {                                                  ### Recursive
+  public boolean validPalindrome(String s) {
+    int p1 = 0;
+    int p2 = s.length() - 1;
+    return isPalindrome(s,p1,p2,true);
+
+  }
+  public boolean isPalindrome(String s, int p1, int p2, boolean key) {
+
+    while (p1 < p2) {
+      if (s.charAt(p1) != s.charAt(p2) && key == true) {
+       if (isPalindrome(s, p1 + 1, p2,false) == true || isPalindrome(s, p1, p2 - 1,false) == true) return true;
+        return false;
+      }
+        else if(s.charAt(p1) != s.charAt(p2) && key == false){
+            return false;
+        }
+      p1++;
+      p2--;
+    }
+    return true;
+  }
+
+}
+
+****************************************************************
+class Solution {						### Iterative-uh
+  public boolean validPalindrome(String s) {
+    int p1 = 0;
+    int p2 = s.length() - 1;
+
+    while (p1 < p2) {
+      if (s.charAt(p1) != s.charAt(p2)) {
+        if (isPalindrome(s, p1 + 1, p2) == true || isPalindrome(s, p1, p2 - 1) == true) return true;
+        return false;
+      }
+      p1++;
+      p2--;
+    }
+    return true;
+
+  }
+  public boolean isPalindrome(String s, int p1, int p2) {
+
+    while (p1 < p2) {
+      if (s.charAt(p1) != s.charAt(p2)) {
+        return false;
+      }
+      p1++;
+      p2--;
+    }
+    return true;
+  }
+}
+
+
+
+****************************************************
+
+One thing I was reminded of is to trust my intution. Second, the key here is once we hit a mistake, instead of returning
+false, we have 1 allowable istake as per the problem. So we move our right pointer to the next step while keeping our
+left pointer where it is, and ALSO Vice Versa, so we call the recursive function twice in what is left. Because our 
+saving can come from either end. 

@@ -1,0 +1,31 @@
+class Solution {
+    public String mostCommonWord(String paragraph, String[] banned) {
+        
+        HashSet<String> ban = new HashSet();		   I learned a regex expression to ignore all punctuation
+        HashMap<String,Integer> map = new HashMap();	   and how to loop through a Map with Keys to do a ton of relational
+        						   logic between keys and values.
+        for (int i = 0; i < banned.length; i++){
+            ban.add(banned[i]);
+        }
+        
+        String[] words = paragraph.toLowerCase().split("\\W+");
+        
+        for (int i = 0; i < words.length; i++){
+                if(!ban.contains(words[i])){
+                    map.put(words[i], map.getOrDefault(words[i],0) + 1);
+                }       
+        }
+        
+        String most = "";
+        int max = 0;
+        for (Map.Entry<String,Integer> entry : map.entrySet()){
+            
+            if (map.get(entry.getKey()) > max){
+                max = map.get(entry.getKey());
+                most = entry.getKey();
+            }
+            
+        }
+        return most;
+    }
+}z

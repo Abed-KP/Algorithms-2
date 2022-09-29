@@ -1,0 +1,74 @@
+class Solution {
+    public long maxPoints(int[][] points) {
+        
+        int rows = points.length;
+        int cols = points[0].length;
+        long[] prev = new long[cols];
+        copy(prev,points[0]);
+        
+        for(int i = 1; i < rows; i++){
+            long[] left = new long[cols];
+            long leftmax = 0;
+            int[] currRow = points[i];
+                
+            for(int j = 0; j < cols; j++){
+                long max  = Math.max(prev[j],leftmax - 1);
+                left[j] =  currRow[j] + max;
+                leftmax = max;
+            }
+                       
+            long[] right = new long[cols];
+            long rightmax = 0;
+            
+            for(int j = cols - 1; j >= 0; j--){
+                long max = Math.max(prev[j], rightmax - 1);
+                right[j] = currRow[j] + max;
+                rightmax = max;
+            }
+            
+            long[] newCurrentRow = new long[cols];
+            for(int j = 0; j < cols; j++) newCurrentRow[j] = Math.max(left[j],right[j]);
+            prev = newCurrentRow;
+        }
+        
+        long max  = -1;
+        for(long num : prev) max = Math.max(max,num);
+        return max;
+    }
+    public void copy(long[] arr1, int[] arr2){
+        for(int i = 0; i < arr1.length; i++) arr1[i] = arr2[i];
+    }   
+}
+
+******************************************************************************
+The idea behind this problem was Dynamic programming, from the left, from the right, and from top to bottom.
+
+The key was realzing that if I pick any element, I can choose above it, or I can get the max element that has travelled
+towards me from the left, or the max element that has travelled towards me from the right. When getting those max elements,
+I have to factor in the decreases due to columns changing.
+
+Here is an example to illustrate
+
+[0,0,0,50]
+[8,0,0,0 ]
+
+Let us start with left max and upper values, then go to right max and upper values.
+
+for 8: We look, what is greater? the upper value that is 0, or the max left value -1? The answer is the upper value.
+
+Now the key is that if the upper left value - 1 was higher, then we take that value. The '-1' that we just included has
+adjustd the value for future uses. Let us demonstrate this idea using the right side array.
+
+1st: 0 and 50. Right most is alsol  0. what is greater> rightmost - 1 or the upper value which is 50? Obviously 50. It also 
+becomes out rightmost value now.
+
+2nd: now it is 0 and 0: rightmost is 50. Should i take my upper value which is 0 (but saves me a column decrease) or
+do I take my rightmost value, but which the catch of having to subtract 1? Well rightmost - 1 is 49! So obviously.
+Now my righmost becomes 49. Due to the minus 1, the change ofe column decrease is already factored in.
+
+3rd. now it is 0 and 0 again, with the rightmost being 49. So 49 - 1 gives me 48 which is way better than 0, so lets take
+48, and now it becomes the right msot value.
+
+4th: now we have 8 and 0. Do we take 0 or 49 - 1. We take 47 -1 and  make the total in this cell of thr right array 55.
+
+Now we just take the max values from both rows and we have a brand new row to be used by the bottom row.
